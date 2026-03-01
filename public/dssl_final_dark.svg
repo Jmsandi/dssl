@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 120">
+  <defs>
+    <linearGradient id="centerGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#1EB53A"/>
+      <stop offset="100%" style="stop-color:#0072C6"/>
+    </linearGradient>
+  </defs>
+  
+  <!-- Dark Background -->
+  <rect width="420" height="120" fill="#0F1629"/>
+  
+  <!-- Refined Data Network Icon -->
+  <!-- Central node - larger, gradient -->
+  <circle cx="52" cy="52" r="15" fill="url(#centerGrad)"/>
+  <circle cx="52" cy="52" r="8" fill="#0F1629"/>
+  <circle cx="52" cy="52" r="5" fill="white"/>
+  
+  <!-- Outer nodes - balanced hexagonal arrangement -->
+  <circle cx="52" cy="20" r="6" fill="#1EB53A"/>
+  <circle cx="80" cy="36" r="5" fill="#0072C6"/>
+  <circle cx="80" cy="68" r="6" fill="#1EB53A"/>
+  <circle cx="52" cy="84" r="5" fill="#0072C6"/>
+  <circle cx="24" cy="68" r="6" fill="#1EB53A"/>
+  <circle cx="24" cy="36" r="5" fill="#0072C6"/>
+  
+  <!-- Connection lines - cleaner, consistent -->
+  <line x1="52" y1="52" x2="52" y2="20" stroke="white" stroke-width="1.5" opacity="0.5"/>
+  <line x1="52" y1="52" x2="80" y2="36" stroke="white" stroke-width="1.5" opacity="0.5"/>
+  <line x1="52" y1="52" x2="80" y2="68" stroke="white" stroke-width="1.5" opacity="0.5"/>
+  <line x1="52" y1="52" x2="52" y2="84" stroke="white" stroke-width="1.5" opacity="0.5"/>
+  <line x1="52" y1="52" x2="24" y2="68" stroke="white" stroke-width="1.5" opacity="0.5"/>
+  <line x1="52" y1="52" x2="24" y2="36" stroke="white" stroke-width="1.5" opacity="0.5"/>
+  
+  <!-- Outer ring connections -->
+  <line x1="52" y1="20" x2="80" y2="36" stroke="#1EB53A" stroke-width="1" opacity="0.4"/>
+  <line x1="80" y1="36" x2="80" y2="68" stroke="#0072C6" stroke-width="1" opacity="0.4"/>
+  <line x1="80" y1="68" x2="52" y2="84" stroke="#1EB53A" stroke-width="1" opacity="0.4"/>
+  <line x1="52" y1="84" x2="24" y2="68" stroke="#0072C6" stroke-width="1" opacity="0.4"/>
+  <line x1="24" y1="68" x2="24" y2="36" stroke="#1EB53A" stroke-width="1" opacity="0.4"/>
+  <line x1="24" y1="36" x2="52" y2="20" stroke="#0072C6" stroke-width="1" opacity="0.4"/>
+  
+  <!-- DSSL Text - better spacing -->
+  <text x="115" y="62" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="42" font-weight="700" letter-spacing="4">
+    <tspan fill="#1EB53A">D</tspan><tspan fill="#FFFFFF">S</tspan><tspan fill="#FFFFFF">S</tspan><tspan fill="#0072C6">L</tspan>
+  </text>
+  
+  <!-- Divider line -->
+  <line x1="270" y1="30" x2="270" y2="74" stroke="#FFFFFF" stroke-width="1" opacity="0.3"/>
+  
+  <!-- Full name - right side -->
+  <text x="285" y="45" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="10" font-weight="500" fill="#FFFFFF" letter-spacing="1.5">DATA SCIENCE</text>
+  <text x="285" y="60" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="10" font-weight="500" fill="#FFFFFF" letter-spacing="1.5">SIERRA LEONE</text>
+  
+  <!-- Tagline -->
+  <text x="285" y="78" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="8" fill="#888888" letter-spacing="0.5">Train. Build. Innovate.</text>
+  
+</svg>

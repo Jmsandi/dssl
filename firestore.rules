@@ -1,0 +1,122 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Helper function to check if the user is authenticated
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    // Helper function to check if the user is an admin
+    function isAdmin() {
+      return isAuthenticated() && 
+        exists(/databases/$(database)/documents/users/$(request.auth.uid)) && 
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role in ['super_admin', 'admin', 'finance'];
+    }
+
+    // Helper function to check if the document belongs to the current user
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    // 1. Users collection
+    match /users/{userId} {
+      allow read: if isOwner(userId) || isAdmin();
+      // Allow users to create their own profile, but only admins can update roles
+      allow create: if isOwner(userId);
+      allow update: if isOwner(userId) && (!request.resource.data.diff(resource.data).affectedKeys().hasAny(['role'])) || isAdmin();
+      allow delete: if isAdmin();
+    }
+
+    // 2. Students collection
+    match /students/{studentId} {
+      allow read: if isOwner(studentId) || isAdmin();
+      // Students can create and update their own records
+      allow create: if isOwner(studentId);
+      allow update: if isOwner(studentId) || isAdmin();
+      allow delete: if isAdmin();
+    }
+
+    // 3. Courses collection
+    match /courses/{courseId} {
+      // Anyone can see the courses catalog
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // 4. Enrollments collection
+    match /enrollments/{enrollmentId} {
+      // Students can read their own enrollments, admins can read all
+      allow read: if (isAuthenticated() && resource.data.student_id == request.auth.uid) || isAdmin();
+      // Cloud functions handle creation/updates, but admins can manage them
+      allow write: if isAdmin();
+    }
+
+    // 5. Course Payments collection
+    match /course_payments/{paymentId} {
+      // Students can read their own payments, admins can read all
+      allow read: if (isAuthenticated() && resource.data.student_id == request.auth.uid) || isAdmin();
+      // Students can initiate payments (create pending records)
+      allow create: if isAuthenticated() && request.resource.data.student_id == request.auth.uid;
+      // Normal users shouldn't update payment status directly, only Cloud Functions or Admins
+      allow update, delete: if isAdmin();
+    }
+
+    // 6. Messages collection
+    match /messages/{messageId} {
+      // Students can read messages sent to 'all' or specifically to them
+      allow read: if isAuthenticated() && (
+        resource.data.target == 'all' || 
+        (resource.data.target == 'single' && resource.data.studentId == request.auth.uid)
+      ) || isAdmin();
+      
+      // Only admins can send/edit/delete messages
+      allow write: if isAdmin();
+    }
+
+    // 7. Audit Logs collection
+    match /audit_logs/{logId} {
+      // Only admins can read audit logs
+      allow read: if isAdmin();
+      // Only cloud functions and admins should write audit logs
+      allow write: if isAdmin();
+    }
+
+    // 8. Hire Requests — anyone can submit, only admins can read/delete
+    match /hire_requests/{requestId} {
+      allow create: if true;
+      allow read, update, delete: if isAdmin();
+    }
+
+    // 9. Admin Messages — authenticated students can read, only admins send
+    match /admin_messages/{msgId} {
+      allow read: if isAuthenticated();
+      allow create, update, delete: if isAdmin();
+    }
+
+    // 10. Student Replies — students send replies, admins can read all
+    match /student_replies/{replyId} {
+      allow create: if isAuthenticated() && request.resource.data.studentId == request.auth.uid;
+      allow read: if isAdmin() || (isAuthenticated() && resource.data.studentId == request.auth.uid);
+      allow delete: if isAdmin();
+    }
+
+    // 11. Student Messages (new messages from student to admin)
+    match /student_messages/{msgId} {
+      allow create: if isAuthenticated() && request.resource.data.studentId == request.auth.uid;
+      allow read: if isAdmin() || (isAuthenticated() && resource.data.studentId == request.auth.uid);
+      allow update, delete: if isAdmin();
+    }
+
+    // 10. Contacts / subscribers
+    match /contacts/{docId} {
+      allow create: if true;
+      allow read, update, delete: if isAdmin();
+    }
+    match /subscribers/{docId} {
+      allow create: if true;
+      allow read, update, delete: if isAdmin();
+    }
+  }
+}
