@@ -29,3 +29,8 @@ firebase-export-*
 
 # Backend Functions directory (User generated)
 /functions/
+
+# Env files
+.env
+.env.*
+!.env.example
