@@ -11,10 +11,10 @@ export function MissionSection() {
           {/* Left Side */}
           <div className="flex flex-col">
             <div>
-              <h2 className="font-heading text-3xl font-semibold leading-[1.2] text-foreground md:text-2xl lg:text-3xl">
+              <h2 className="font-heading text-3xl font-semibold leading-[1.2] text-foreground sm:text-4xl md:text-4xl lg:text-5xl">
                 Empowering the Next Generation of Digital Leaders in Sierra Leone
               </h2>
-              <div className="relative mt-12 flex-1 w-[700px] min-h-[400px] overflow-hidden rounded-3xl shadow-2xl shadow-black/10">
+              <div className="relative mt-12 flex-1 w-full max-w-3xl min-h-[300px] sm:min-h-[400px] overflow-hidden rounded-3xl shadow-2xl shadow-black/10">
                 <img src="/b.jpg" alt="DSSL Mission" className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 hover:scale-105" />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
               </div>

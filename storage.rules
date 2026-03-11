@@ -1,0 +1,40 @@
+rules_version = '2';
+
+service firebase.storage {
+  match /b/{bucket}/o {
+
+    // ─── Course Images (uploaded via admin CoursesTab) ─────────────────────
+    // Any authenticated user can write (admin gate is enforced by the
+    // ProtectedRoute + Firestore on the frontend).
+    // Public read so course thumbnails are visible to all visitors.
+    match /course-images/{allPaths=**} {
+      allow read: if true;
+      allow write: if request.auth != null;
+    }
+
+    // ─── Course Images (alternative path) ────────────────────────────────────
+    match /courses/{allPaths=**} {
+      allow read: if true;
+      allow write: if request.auth != null;
+    }
+
+    // ─── Course Materials / Resources ─────────────────────────────────────────
+    match /course_materials/{allPaths=**} {
+      allow read: if request.auth != null;
+      allow write: if request.auth != null;
+    }
+
+    // ─── User Avatars ────────────────────────────────────────────────────────
+    match /avatars/{userId}/{allPaths=**} {
+      allow read: if request.auth != null;
+      allow write: if request.auth.uid == userId;
+    }
+
+    // ─── General Admin Uploads ─────────────────────────────────────────────
+    match /admin_uploads/{allPaths=**} {
+      allow read: if true;
+      allow write: if request.auth != null;
+    }
+
+  }
+}

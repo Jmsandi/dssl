@@ -38,11 +38,16 @@ service cloud.firestore {
       allow delete: if isAdmin();
     }
 
-    // 3. Courses collection
+    // 3. Courses collection — public read, admin full CRUD
     match /courses/{courseId} {
-      // Anyone can see the courses catalog
       allow read: if true;
-      allow write: if isAdmin();
+      allow create, update, delete: if isAdmin();
+
+      // Sub-collection: materials listed under each course
+      match /materials/{materialId} {
+        allow read: if isAuthenticated();
+        allow write: if isAdmin();
+      }
     }
 
     // 4. Enrollments collection

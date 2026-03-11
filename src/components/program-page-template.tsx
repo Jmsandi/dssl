@@ -282,17 +282,17 @@ export function ProgramPageTemplate({ program }: { program: ProgramData }) {
         />
         <div className="absolute inset-0 bg-gradient-to-br from-black/70 via-black/80 to-transparent"></div>
         <div className="container relative z-10 px-6 lg:px-10 mx-auto">
-          <h1 className="font-heading text-4xl font-black text-white md:text-7xl lg:text-7xl tracking-tighter">
+          <h1 className="font-heading text-3xl font-black text-white sm:text-5xl md:text-7xl lg:text-7xl tracking-tighter">
             <span className="text-balance">{program.title}</span>
           </h1>
-          <p className="mt-6 max-w-2xl text-xl font-medium text-white/80 leading-relaxed md:text-xl">
+          <p className="mt-6 max-w-2xl text-lg font-medium text-white/80 leading-relaxed sm:text-xl md:text-xl">
             {program.description}
           </p>
-          <div className="mt-10 flex flex-wrap items-center gap-6">
+          <div className="mt-10 flex flex-col sm:flex-row items-start sm:items-center gap-6">
             <Button
               onClick={handleApply}
               size="lg"
-              className="h-14 px-10 bg-primary/90 text-white shadow-2xl shadow-primary/30 hover:bg-primary/90 rounded-full font-black text-lg transition-transform hover:scale-105"
+              className="w-full sm:w-auto h-14 px-10 bg-primary/90 text-white shadow-2xl shadow-primary/30 hover:bg-primary/90 rounded-full font-black text-lg transition-transform hover:scale-105"
             >
               Apply Now <ArrowRight className="ml-2 h-5 w-5" />
             </Button>
@@ -331,12 +331,12 @@ export function ProgramPageTemplate({ program }: { program: ProgramData }) {
                 </div>
               </div>
 
-              <div className="mt-6 flex flex-wrap gap-12">
-                <Button size="lg" onClick={handleDownload} className="h-12 px-10 rounded-full bg-gradient-to-r from-primary to-secondary text-white font-bold border-none hover:opacity-90 transition-opacity shadow-lg shadow-primary/20">
+              <div className="mt-8 flex flex-col sm:flex-row gap-4 sm:gap-6">
+                <Button size="lg" onClick={handleDownload} className="w-full sm:w-auto h-12 px-10 rounded-full bg-gradient-to-r from-primary to-secondary text-white font-bold border-none hover:opacity-90 transition-opacity shadow-lg shadow-primary/20">
                   Download Curriculum
                 </Button>
-                <Link to="/waitlist">
-                  <Button size="lg" className="h-12 px-10 rounded-full bg-gradient-to-r from-secondary to-primary text-white font-bold border-none hover:opacity-90 transition-opacity shadow-lg shadow-primary/20">
+                <Link to="/waitlist" className="w-full sm:w-auto">
+                  <Button size="lg" className="w-full h-12 px-10 rounded-full bg-gradient-to-r from-secondary to-primary text-white font-bold border-none hover:opacity-90 transition-opacity shadow-lg shadow-primary/20">
                     Join Our Waitlist
                   </Button>
                 </Link>
