@@ -8,6 +8,7 @@ export interface Course {
     duration: string
     format: string
     description: string
+    imageUrl?: string
     badge?: string
 }
 

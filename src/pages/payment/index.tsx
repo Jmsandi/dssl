@@ -63,7 +63,7 @@ function PaymentContent() {
                         id: courseDoc.id,
                         title: data?.name,
                         description: data?.description || "Premium professional certification course.",
-                        image: defaultImg,
+                        image: data?.imageUrl || defaultImg,
                         price: data?.price ?? 0,
                         currency: data?.currency || "SLE",
                         slug: data?.slug || programSlug
