@@ -31,20 +31,20 @@ export default function AdminLogin() {
     }
 
     return (
-        <div className="min-h-screen bg-[#080812] flex items-center justify-center p-4 relative overflow-hidden">
-            <div className="absolute top-0 right-1/3 w-96 h-96 bg-violet-600/20 rounded-full blur-3xl pointer-events-none" />
-            <div className="absolute bottom-0 left-1/3 w-96 h-96 bg-indigo-600/20 rounded-full blur-3xl pointer-events-none" />
+        <div className="min-h-screen bg-navy flex items-center justify-center p-4 sm:p-8 relative overflow-hidden">
+            <div className="absolute top-0 right-1/3 w-96 h-96 bg-primary/10 rounded-full blur-3xl pointer-events-none" />
+            <div className="absolute bottom-0 left-1/3 w-96 h-96 bg-secondary/10 rounded-full blur-3xl pointer-events-none" />
 
             <div className="w-full max-w-md relative z-10">
-                <div className="text-center mb-8">
-                    <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-violet-500 to-indigo-600 shadow-lg shadow-violet-500/30 mb-4">
-                        <Shield className="w-8 h-8 text-white" />
+                <div className="text-center mb-6 sm:mb-8">
+                    <div className="inline-flex items-center justify-center w-12 h-12 sm:w-16 sm:h-16 rounded-2xl bg-gradient-to-br from-primary to-secondary shadow-lg shadow-primary/20 mb-4">
+                        <Shield className="w-6 h-6 sm:w-8 sm:h-8 text-white" />
                     </div>
-                    <h1 className="text-3xl font-bold text-white">Admin Access</h1>
-                    <p className="text-white/50 mt-1">Sign in to the admin dashboard</p>
+                    <h1 className="text-2xl sm:text-3xl font-bold text-white">Admin Access</h1>
+                    <p className="text-white/50 mt-1 text-sm sm:text-base">Sign in to the admin dashboard</p>
                 </div>
 
-                <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-8 shadow-2xl">
+                <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-6 sm:p-8 shadow-2xl">
                     <form onSubmit={handleSubmit} className="space-y-5">
                         {error && (
                             <div className="bg-red-500/10 border border-red-500/30 rounded-xl p-3 text-red-400 text-sm">
@@ -60,7 +60,7 @@ export default function AdminLogin() {
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
                                 placeholder="admin@dssl.org"
-                                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-white/30 focus:outline-none focus:border-violet-500/60 focus:ring-1 focus:ring-violet-500/40 transition"
+                                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-white/30 focus:outline-none focus:border-primary/60 focus:ring-1 focus:ring-primary/40 transition"
                             />
                         </div>
 
@@ -73,7 +73,7 @@ export default function AdminLogin() {
                                     value={password}
                                     onChange={(e) => setPassword(e.target.value)}
                                     placeholder="••••••••"
-                                    className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 pr-12 text-white placeholder-white/30 focus:outline-none focus:border-violet-500/60 focus:ring-1 focus:ring-violet-500/40 transition"
+                                    className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 pr-12 text-white placeholder-white/30 focus:outline-none focus:border-primary/60 focus:ring-1 focus:ring-primary/40 transition"
                                 />
                                 <button
                                     type="button"
@@ -88,7 +88,7 @@ export default function AdminLogin() {
                         <button
                             type="submit"
                             disabled={loading}
-                            className="w-full bg-gradient-to-r from-violet-500 to-indigo-600 hover:from-violet-400 hover:to-indigo-500 text-white font-semibold py-3 rounded-xl transition-all shadow-lg shadow-violet-500/20 disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                            className="w-full bg-gradient-to-r from-primary to-secondary hover:from-primary/90 hover:to-secondary/90 text-white font-semibold py-3 rounded-xl transition-all shadow-lg shadow-primary/20 disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                         >
                             {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : null}
                             {loading ? 'Authenticating…' : 'Sign In as Admin'}

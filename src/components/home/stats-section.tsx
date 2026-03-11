@@ -64,7 +64,7 @@ export function StatsSection() {
           {/* Dimming Overlay */}
           <div className="absolute inset-0 bg-black/10 pointer-events-none" />
           <div className="relative z-10 mx-auto flex flex-col gap-12 lg:flex-row lg:items-center lg:justify-between lg:gap-8 px-6 lg:px-12">
-            <div className="grid flex-1 grid-cols-2 gap-y-12 gap-x-8 md:grid-cols-4 lg:gap-x-16">
+            <div className="grid flex-1 grid-cols-1 sm:grid-cols-2 gap-y-12 gap-x-8 md:grid-cols-4 lg:gap-x-16">
               {stats.map((stat) => (
                 <StatItem key={stat.label} stat={stat} />
               ))}

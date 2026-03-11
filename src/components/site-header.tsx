@@ -66,10 +66,10 @@ export function SiteHeader() {
     }
 
     return (
-        <header className="absolute top-8 left-0 text-black right-0 z-50 h-[80px] xl:h-[70px] flex items-center justify-center transition-all duration-300">
+        <header className="absolute top-4 lg:top-8 left-0 text-black right-0 z-50 h-[80px] xl:h-[70px] flex items-center justify-center transition-all duration-300">
             <div className={cn(
-                "relative flex h-full w-full items-center justify-between transition-all duration-300 px-6 xl:px-10",
-                "bg-slate-100/45 backdrop-blur-md shadow-lg rounded-full max-w-7xl border border-white/20"
+                "relative flex h-full w-full items-center justify-between transition-all duration-300 px-4 sm:px-6 xl:px-10",
+                "bg-slate-100/45 backdrop-blur-md shadow-lg rounded-full max-w-7xl border border-white/20 mx-4 sm:mx-6"
             )}>
                 {/* Logo */}
                 <Link to="/" className="flex items-center shrink-0">

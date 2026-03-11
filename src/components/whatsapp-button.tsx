@@ -12,8 +12,8 @@ export function WhatsAppButton() {
             target="_blank"
             rel="noopener noreferrer"
             className={cn(
-                "fixed bottom-8 right-8 z-[100]",
-                "flex h-12 w-12 items-center justify-center rounded-full",
+                "fixed bottom-4 right-4 sm:bottom-8 sm:right-8 z-[100]",
+                "flex h-10 w-10 sm:h-12 sm:w-12 items-center justify-center rounded-full",
                 "bg-[#25D366] text-white shadow-lg transition-all duration-300",
                 "hover:scale-110 hover:bg-[#128C7E] active:scale-95"
             )}

@@ -84,18 +84,18 @@ export default function HireApplicationPage() {
 
     if (submitted) {
         return (
-            <div className="min-h-screen bg-[#0a1128] text-white flex items-center justify-center px-6">
+            <div className="min-h-screen bg-white text-navy flex items-center justify-center px-6">
                 <div className="text-center max-w-lg animate-in fade-in duration-700">
-                    <div className="w-20 h-20 bg-primary/20 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <div className="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-6">
                         <CheckCircle2 className="w-10 h-10 text-primary" />
                     </div>
                     <h2 className="text-4xl font-black tracking-tighter mb-4">Request Submitted!</h2>
-                    <p className="text-slate-300 text-lg leading-relaxed mb-8">
+                    <p className="text-slate-500 text-lg leading-relaxed mb-8">
                         Thank you for your interest in hiring DSSL graduates. Our team will review your request and get back to you within <strong>2 business days</strong>.
                     </p>
                     <Button
                         onClick={() => window.location.href = "/hire"}
-                        className="h-14 rounded-full bg-primary text-white px-10 font-bold text-lg"
+                        className="h-14 rounded-full bg-navy text-white px-10 font-bold text-lg"
                     >
                         Back to Hire Page
                     </Button>
@@ -105,15 +105,15 @@ export default function HireApplicationPage() {
     }
 
     return (
-        <div className="min-h-screen bg-[#0a1128] text-white">
+        <div className="min-h-screen bg-white text-navy">
             {/* Hero Section */}
-            <section className="relative h-[70vh] w-full overflow-hidden">
+            <section className="relative h-[60vh] w-full overflow-hidden">
                 <img
                     src="/data-analytics.jpg"
                     alt="DSSL Students"
                     className="absolute inset-0 h-full w-full object-cover"
                 />
-                <div className="absolute inset-0 bg-gradient-to-br from-black/70 via-black/80 to-transparent" />
+                <div className="absolute inset-0 bg-navy/60" />
 
                 <div className="absolute bottom-20 left-0 right-0 px-6 lg:px-12">
                     <div className="max-w-7xl mx-auto">
@@ -125,31 +125,31 @@ export default function HireApplicationPage() {
             </section>
 
             {/* Form Section */}
-            <section className="py-20 px-6 lg:px-12">
-                <div className="max-w-5xl mx-auto">
+            <section className="py-24 px-6 lg:px-12">
+                <div className="max-w-6xl mx-auto">
                     <form className="space-y-10" onSubmit={handleSubmit}>
                         <div className="grid md:grid-cols-2 gap-8">
                             <div className="space-y-3">
-                                <Label htmlFor="first-name" className="text-sm font-bold flex items-center gap-1">
+                                <Label htmlFor="first-name" className="text-sm font-bold flex items-center gap-1 text-navy uppercase tracking-wider">
                                     First Name <span className="text-primary">*</span>
                                 </Label>
                                 <Input
                                     id="first-name"
                                     placeholder="Enter Your First Name"
-                                    className="h-14 bg-[#0a1128] border-slate-800 text-white placeholder:text-slate-500 rounded-lg px-6 focus:border-primary transition-all ring-0"
+                                    className="h-14 bg-white border-slate-200 text-navy placeholder:text-slate-400 rounded-lg px-6 focus:border-primary transition-all ring-0"
                                     required
                                     value={form.firstName}
                                     onChange={e => setForm(f => ({ ...f, firstName: e.target.value }))}
                                 />
                             </div>
                             <div className="space-y-3">
-                                <Label htmlFor="last-name" className="text-sm font-bold flex items-center gap-1">
+                                <Label htmlFor="last-name" className="text-sm font-bold flex items-center gap-1 text-navy uppercase tracking-wider">
                                     Last Name <span className="text-primary">*</span>
                                 </Label>
                                 <Input
                                     id="last-name"
                                     placeholder="Enter Your Last Name"
-                                    className="h-14 bg-[#0a1128] border-slate-800 text-white placeholder:text-slate-500 rounded-lg px-6 focus:border-primary transition-all ring-0"
+                                    className="h-14 bg-white border-slate-200 text-navy placeholder:text-slate-400 rounded-lg px-6 focus:border-primary transition-all ring-0"
                                     required
                                     value={form.lastName}
                                     onChange={e => setForm(f => ({ ...f, lastName: e.target.value }))}
@@ -158,15 +158,15 @@ export default function HireApplicationPage() {
                         </div>
 
                         <div className="space-y-3">
-                            <Label htmlFor="company-email" className="text-sm font-bold flex items-center gap-1">
+                            <Label htmlFor="company-email" className="text-sm font-bold flex items-center gap-1 text-navy uppercase tracking-wider">
                                 Company Email <span className="text-primary">*</span>
-                                <Info className="w-4 h-4 text-primary ml-1" />
+                                <Info className="w-3.5 h-3.5 text-primary/60 ml-1" />
                             </Label>
                             <Input
                                 id="company-email"
                                 type="email"
                                 placeholder="Enter Your Company Email Address"
-                                className="h-14 bg-[#0a1128] border-slate-800 text-white placeholder:text-slate-500 rounded-lg px-6 focus:border-primary transition-all ring-0"
+                                className="h-14 bg-white border-slate-200 text-navy placeholder:text-slate-400 rounded-lg px-6 focus:border-primary transition-all ring-0"
                                 required
                                 value={form.email}
                                 onChange={e => setForm(f => ({ ...f, email: e.target.value }))}
@@ -174,14 +174,13 @@ export default function HireApplicationPage() {
                         </div>
 
                         <div className="space-y-3">
-                            <Label htmlFor="phone" className="text-sm font-bold flex items-center gap-1">
+                            <Label htmlFor="phone" className="text-sm font-bold flex items-center gap-1 text-navy uppercase tracking-wider">
                                 Phone/Mobile <span className="text-primary">*</span>
-                                <Info className="w-4 h-4 text-primary ml-1" />
                             </Label>
                             <Input
                                 id="phone"
                                 placeholder="Enter Your Contact Number"
-                                className="h-14 bg-[#0a1128] border-slate-800 text-white placeholder:text-slate-500 rounded-lg px-6 focus:border-primary transition-all ring-0"
+                                className="h-14 bg-white border-slate-200 text-navy placeholder:text-slate-400 rounded-lg px-6 focus:border-primary transition-all ring-0"
                                 required
                                 value={form.phone}
                                 onChange={e => setForm(f => ({ ...f, phone: e.target.value }))}
@@ -189,14 +188,13 @@ export default function HireApplicationPage() {
                         </div>
 
                         <div className="space-y-3">
-                            <Label htmlFor="company-name" className="text-sm font-bold flex items-center gap-1">
+                            <Label htmlFor="company-name" className="text-sm font-bold flex items-center gap-1 text-navy uppercase tracking-wider">
                                 Company/Organization Name <span className="text-primary">*</span>
-                                <Info className="w-4 h-4 text-primary ml-1" />
                             </Label>
                             <Input
                                 id="company-name"
                                 placeholder="Which company are you working with?"
-                                className="h-14 bg-[#0a1128] border-slate-800 text-white placeholder:text-slate-500 rounded-lg px-6 focus:border-primary transition-all ring-0"
+                                className="h-14 bg-white border-slate-200 text-navy placeholder:text-slate-400 rounded-lg px-6 focus:border-primary transition-all ring-0"
                                 required
                                 value={form.company}
                                 onChange={e => setForm(f => ({ ...f, company: e.target.value }))}
@@ -204,13 +202,13 @@ export default function HireApplicationPage() {
                         </div>
 
                         <div className="space-y-3">
-                            <Label htmlFor="industry" className="text-sm font-bold flex items-center gap-1">
-                                Industry or Sector. <span className="text-primary">*</span>
+                            <Label htmlFor="industry" className="text-sm font-bold flex items-center gap-1 text-navy uppercase tracking-wider">
+                                Industry or Sector <span className="text-primary">*</span>
                             </Label>
                             <Input
                                 id="industry"
                                 placeholder="Which industry or sector does your company work in?"
-                                className="h-14 bg-[#0a1128] border-slate-800 text-white placeholder:text-slate-500 rounded-lg px-6 focus:border-primary transition-all ring-0"
+                                className="h-14 bg-white border-slate-200 text-navy placeholder:text-slate-400 rounded-lg px-6 focus:border-primary transition-all ring-0"
                                 required
                                 value={form.industry}
                                 onChange={e => setForm(f => ({ ...f, industry: e.target.value }))}
@@ -218,14 +216,14 @@ export default function HireApplicationPage() {
                         </div>
 
                         <div className="space-y-3">
-                            <Label className="text-sm font-bold flex items-center gap-1">
-                                What kind of talent are you looking for? <span className="text-primary">*</span>
+                            <Label className="text-sm font-bold flex items-center gap-1 text-navy uppercase tracking-wider">
+                                Talent Requirement <span className="text-primary">*</span>
                             </Label>
                             <Select value={talentType} onValueChange={setTalentType}>
-                                <SelectTrigger className="h-14 bg-[#0a1128] border-slate-800 text-slate-500 px-6 rounded-lg focus:ring-0 focus:border-primary">
+                                <SelectTrigger className="h-14 bg-white border-slate-200 text-slate-500 px-6 rounded-lg focus:ring-0 focus:border-primary">
                                     <SelectValue placeholder="- Select -" />
                                 </SelectTrigger>
-                                <SelectContent className="bg-[#0a1128] border-slate-800 text-white">
+                                <SelectContent className="bg-white border-slate-200 text-navy">
                                     <SelectItem value="data-analyst">Data Analyst</SelectItem>
                                     <SelectItem value="data-scientist">Data Scientist</SelectItem>
                                     <SelectItem value="data-engineer">Data Engineer</SelectItem>
@@ -235,33 +233,33 @@ export default function HireApplicationPage() {
                         </div>
 
                         <div className="space-y-5">
-                            <Label className="text-sm font-bold flex items-center gap-1">
-                                What kind of skills are you looking for? <span className="text-primary">*</span>
+                            <Label className="text-sm font-bold flex items-center gap-1 text-navy uppercase tracking-wider">
+                                Skills Required <span className="text-primary">*</span>
                             </Label>
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 {["Artificial Intelligence", "Data Analytics", "Data Engineering", "Data Science", "Digital Marketing", "Other"].map((skill) => (
                                     <div key={skill} className="flex items-center space-x-3 group cursor-pointer" onClick={() => toggleSkill(skill)}>
-                                        <div className={cn("w-5 h-5 border-2 rounded flex items-center justify-center transition-all", skills.includes(skill) ? "bg-primary border-primary" : "border-slate-700 group-hover:border-primary")}>
+                                        <div className={cn("w-5 h-5 border-2 rounded flex items-center justify-center transition-all", skills.includes(skill) ? "bg-primary border-primary" : "border-slate-200 group-hover:border-primary")}>
                                             {skills.includes(skill) && (
                                                 <svg viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth={4} strokeLinecap="round" strokeLinejoin="round" className="w-3 h-3">
                                                     <polyline points="20 6 9 17 4 12" />
                                                 </svg>
                                             )}
                                         </div>
-                                        <span className="text-slate-300 text-sm font-medium">{skill}</span>
+                                        <span className="text-slate-600 text-sm font-medium">{skill}</span>
                                     </div>
                                 ))}
                             </div>
                         </div>
 
                         <div className="space-y-3">
-                            <Label htmlFor="count" className="text-sm font-bold flex items-center gap-1">
-                                Number of Professionals <span className="text-primary">*</span>
+                            <Label htmlFor="count" className="text-sm font-bold flex items-center gap-1 text-navy uppercase tracking-wider">
+                                Professionals Count <span className="text-primary">*</span>
                             </Label>
                             <Input
                                 id="count"
                                 placeholder="How many professional(s) are you looking for?"
-                                className="h-14 bg-[#0a1128] border-slate-800 text-white placeholder:text-slate-500 rounded-lg px-6 focus:border-primary transition-all ring-0"
+                                className="h-14 bg-white border-slate-200 text-navy placeholder:text-slate-400 rounded-lg px-6 focus:border-primary transition-all ring-0"
                                 required
                                 value={form.count}
                                 onChange={e => setForm(f => ({ ...f, count: e.target.value }))}
@@ -269,14 +267,13 @@ export default function HireApplicationPage() {
                         </div>
 
                         <div className="space-y-3">
-                            <Label htmlFor="responsibilities" className="text-sm font-bold flex items-center gap-1">
-                                Briefly share the expected responsibilities. <span className="text-primary">*</span>
-                                <Info className="w-4 h-4 text-primary ml-1" />
+                            <Label htmlFor="responsibilities" className="text-sm font-bold flex items-center gap-1 text-navy uppercase tracking-wider">
+                                Responsibilities Overview <span className="text-primary">*</span>
                             </Label>
                             <Textarea
                                 id="responsibilities"
                                 placeholder="What are the professional(s) required to do"
-                                className="min-h-[150px] bg-[#0a1128] border-slate-800 text-white placeholder:text-slate-500 rounded-lg px-6 py-4 focus:border-primary transition-all ring-0 resize-none"
+                                className="min-h-[150px] bg-white border-slate-200 text-navy placeholder:text-slate-400 rounded-lg px-6 py-4 focus:border-primary transition-all ring-0 resize-none"
                                 required
                                 value={form.responsibilities}
                                 onChange={e => setForm(f => ({ ...f, responsibilities: e.target.value }))}
@@ -284,14 +281,14 @@ export default function HireApplicationPage() {
                         </div>
 
                         <div className="space-y-3">
-                            <Label className="text-sm font-bold flex items-center gap-1">
-                                How did you hear about DSSL? <span className="text-primary">*</span>
+                            <Label className="text-sm font-bold flex items-center gap-1 text-navy uppercase tracking-wider">
+                                Discovery Channel <span className="text-primary">*</span>
                             </Label>
                             <Select value={referral} onValueChange={setReferral}>
-                                <SelectTrigger className="h-14 bg-[#0a1128] border-slate-800 text-slate-500 px-6 rounded-lg focus:ring-0 focus:border-primary">
+                                <SelectTrigger className="h-14 bg-white border-slate-200 text-slate-500 px-6 rounded-lg focus:ring-0 focus:border-primary">
                                     <SelectValue placeholder="- Select -" />
                                 </SelectTrigger>
-                                <SelectContent className="bg-[#0a1128] border-slate-800 text-white">
+                                <SelectContent className="bg-white border-slate-200 text-navy">
                                     <SelectItem value="social-media">Social Media</SelectItem>
                                     <SelectItem value="word-of-mouth">Word of Mouth</SelectItem>
                                     <SelectItem value="event">Event</SelectItem>
@@ -304,11 +301,11 @@ export default function HireApplicationPage() {
                             <Button
                                 type="submit"
                                 disabled={submitting}
-                                className="w-full h-16 bg-[#ea1c24] hover:bg-[#ea1c24]/90 text-white font-black text-xl rounded-full shadow-2xl shadow-red-900/40 transition-all hover:scale-[1.01] active:scale-[0.99] tracking-tight"
+                                className="w-full h-16 bg-primary hover:bg-primary/95 text-white font-black text-xl rounded-full shadow-2xl shadow-primary/20 transition-all hover:scale-[1.01] active:scale-[0.99] tracking-tight uppercase"
                             >
                                 {submitting ? (
-                                    <><Loader2 className="w-5 h-5 animate-spin mr-2" /> Submitting...</>
-                                ) : "Submit"}
+                                    <><Loader2 className="w-5 h-5 animate-spin mr-2" /> Submitting Request...</>
+                                ) : "Submit Application"}
                             </Button>
                         </div>
                     </form>

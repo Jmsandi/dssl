@@ -34,6 +34,9 @@ import {
     Download,
     ExternalLink,
     BookMarked,
+    Zap,
+    Info,
+    Globe,
 } from 'lucide-react'
 
 const PROGRAM_ICONS: Record<string, string> = {
@@ -47,29 +50,25 @@ const PROGRAM_ICONS: Record<string, string> = {
 
 const NAV_SECTIONS = [
     {
-        title: 'MAIN MENU',
+        title: 'LEARNING',
         items: [
             { icon: LayoutDashboard, label: 'Dashboard', id: 'dashboard' },
-            { icon: GraduationCap, label: 'My Programs', id: 'programs' },
-            { icon: Compass, label: 'Course Catalog', id: 'catalog' },
-            { icon: CreditCard, label: 'Payments', id: 'payments' },
+            { icon: GraduationCap, label: 'My Learning', id: 'learning' },
+            { icon: Calendar, label: 'Schedule', id: 'schedule' },
+            { icon: FileText, label: 'Resources', id: 'resources' },
         ],
     },
     {
-        title: 'LEARNING',
+        title: 'SUPPORT',
         items: [
-            { icon: FileText, label: 'Resources', id: 'resources' },
-            { icon: Award, label: 'Certificates', id: 'certificates' },
-            { icon: Calendar, label: 'Schedule', id: 'schedule' },
-            { icon: BarChart2, label: 'Progress', id: 'progress' },
+            { icon: MessageSquare, label: 'Messages', id: 'messages' },
+            { icon: CreditCard, label: 'Payments', id: 'payments' },
         ],
     },
     {
         title: 'ACCOUNT',
         items: [
-            { icon: MessageSquare, label: 'Messages', id: 'messages' },
-            { icon: User, label: 'My Profile', id: 'profile-settings' },
-            { icon: Settings, label: 'Settings', id: 'settings' },
+            { icon: User, label: 'Profile', id: 'profile' },
         ],
     },
 ]
@@ -109,18 +108,61 @@ function Badge({ color, children }: { color: string; children: React.ReactNode }
 
 // ─── Section Views ──────────────────────────────────────────────────
 
-function DashboardView({ profile, navigate }: { profile: any; navigate: (path: string) => void }) {
+function DashboardView({ profile, payments, navigate }: { profile: any; payments: any[]; navigate: (path: string) => void }) {
+    const { user } = useAuth()
+    const [announcements, setAnnouncements] = useState<any[]>([])
+    const [loadingAnnouncements, setLoadingAnnouncements] = useState(true)
+
     const displayName = profile?.name ?? 'Student'
+    const completedPayments = payments.filter(p => p.status?.toLowerCase() === 'completed')
+    const totalSpent = completedPayments.reduce((acc, p) => acc + (p.amount || 0), 0)
+
+    useEffect(() => {
+        if (!user) return
+        const q = query(
+            collection(db, 'admin_messages'),
+            orderBy('sentAt', 'desc')
+        )
+        const unsub = onSnapshot(q, snap => {
+            // Filter client-side to avoid composite index requirement
+            const broadcast = snap.docs
+                .map(d => ({ id: d.id, ...d.data() } as any))
+                .filter(m => m.recipientType === 'all')
+                .slice(0, 3)
+
+            setAnnouncements(broadcast)
+            setLoadingAnnouncements(false)
+        }, (error) => {
+            console.error('Announcements error:', error)
+            setLoadingAnnouncements(false)
+        })
+        return () => unsub()
+    }, [user])
+
+    const fmtTime = (ts?: { seconds: number }) => {
+        if (!ts) return ''
+        const d = new Date(ts.seconds * 1000)
+        const diffDays = Math.floor((Date.now() - d.getTime()) / 86400000)
+        if (diffDays === 0) return 'Today'
+        if (diffDays === 1) return 'Yesterday'
+        if (diffDays < 7) return `${diffDays} days ago`
+        return d.toLocaleDateString()
+    }
+
     return (
         <div className="space-y-6">
             {/* Welcome Banner */}
-            <div className="bg-gradient-to-r from-[#0B3C6F] to-[#1B6AE0] rounded-lg p-6 flex items-center justify-between shadow-sm">
-                <div>
-                    <p className="text-white/70 text-sm">Good morning 👋</p>
-                    <h2 className="text-2xl font-bold text-white mt-1">Welcome back, {displayName.split(' ')[0]}!</h2>
-                    <p className="text-white/60 text-sm mt-1">{profile?.program || 'DSSL Academy'} • Active Student</p>
+            <div className="bg-[#0B3C6F] rounded-2xl p-8 flex items-center justify-between shadow-lg relative overflow-hidden">
+                <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full -mr-20 -mt-20 blur-3xl" />
+                <div className="relative z-10">
+                    <p className="text-white/60 text-sm font-medium">Welcome back,</p>
+                    <h2 className="text-3xl font-bold text-white mt-1 tracking-tight">{displayName}</h2>
+                    <div className="flex items-center gap-3 mt-4">
+                        <Badge color="bg-white/10 text-white border border-white/10 px-3 py-1">Active Student</Badge>
+                        <span className="text-white/40 text-xs font-medium">Cohort 2025 • {profile?.program || 'Academy'}</span>
+                    </div>
                 </div>
-                <div className="hidden md:flex w-16 h-16 rounded-full bg-[#2D7FF9]/30 items-center justify-center text-3xl font-bold text-white">
+                <div className="hidden md:flex w-20 h-20 rounded-2xl bg-white/10 items-center justify-center text-4xl font-bold text-white border border-white/10 backdrop-blur-sm relative z-10">
                     {displayName.charAt(0).toUpperCase()}
                 </div>
             </div>
@@ -128,18 +170,18 @@ function DashboardView({ profile, navigate }: { profile: any; navigate: (path: s
             {/* Stats */}
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
                 {[
-                    { label: 'Programs', value: '1', icon: GraduationCap, bg: 'bg-[#0B3C6F]' },
+                    { label: 'Programs', value: completedPayments.length.toString(), icon: GraduationCap, bg: 'bg-[#0B3C6F]' },
                     { label: 'Completed', value: '0', icon: CheckCircle, bg: 'bg-[#2D7FF9]' },
                     { label: 'Resources', value: '12', icon: FileText, bg: 'bg-indigo-500' },
                     { label: 'Certificates', value: '0', icon: Award, bg: 'bg-amber-500' },
                 ].map(s => (
-                    <div key={s.label} className="bg-white rounded-lg shadow-sm border border-[#E0E6ED] p-5 flex items-center gap-4">
-                        <div className={`w-11 h-11 rounded-lg flex items-center justify-center flex-shrink-0 ${s.bg}`}>
+                    <div key={s.label} className="bg-white rounded-xl border border-[#E0E6ED] p-5 flex items-center gap-4 hover:shadow-md transition duration-300">
+                        <div className={`w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0 ${s.bg}`}>
                             <s.icon className="w-5 h-5 text-white" />
                         </div>
                         <div>
-                            <p className="text-2xl font-bold text-[#0B3C6F]">{s.value}</p>
-                            <p className="text-xs text-slate-400 mt-0.5">{s.label}</p>
+                            <p className="text-xl font-bold text-[#0B3C6F]">{s.label === 'Total Paid' ? `SLE ${totalSpent}` : s.value}</p>
+                            <p className="text-xs text-slate-400 font-medium">{s.label}</p>
                         </div>
                     </div>
                 ))}
@@ -147,36 +189,37 @@ function DashboardView({ profile, navigate }: { profile: any; navigate: (path: s
 
             {/* Program + Announcements */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <SectionCard title="My Active Program">
-                    <div className="flex items-center gap-4 p-4 border border-[#E0E6ED] rounded-lg">
+                <SectionCard title="Active Program">
+                    <div className="flex items-center gap-4 p-4 border border-[#E0E6ED] rounded-xl bg-[#F8FAFC]/50">
                         <span className="text-3xl">{PROGRAM_ICONS[profile?.program ?? ''] ?? '📚'}</span>
                         <div className="flex-1">
-                            <p className="font-semibold text-[#0B3C6F]">{profile?.program || 'No program selected'}</p>
-                            <p className="text-sm text-slate-400 mt-0.5">Academic Year 2025 • Active</p>
+                            <p className="font-bold text-[#0B3C6F]">{profile?.program || 'No program selected'}</p>
+                            <p className="text-xs text-slate-500 font-medium mt-0.5">Academic Session 2025</p>
                         </div>
-                        <Badge color="bg-emerald-50 text-emerald-700">Enrolled</Badge>
+                        <Badge color="bg-emerald-100 text-emerald-700 border border-emerald-200">Enrolled</Badge>
                     </div>
-                    <button onClick={() => navigate('/student/apply')}
-                        className="mt-4 w-full text-center text-sm text-[#2D7FF9] font-medium hover:underline">
-                        Browse more courses →
-                    </button>
                 </SectionCard>
 
-                <SectionCard title="📢 Announcements">
-                    <div className="space-y-3">
-                        {[
-                            { text: 'Welcome to DSSL Academy! Your portal is now active.', time: 'Today', unread: true },
-                            { text: 'New Data Science workshops are being scheduled for Q2 2025.', time: '2 days ago', unread: false },
-                            { text: 'Payment portal is now live — enroll in additional courses anytime.', time: '1 week ago', unread: false },
-                        ].map((a, i) => (
-                            <div key={i} className={`flex gap-3 p-3 rounded-lg ${a.unread ? 'bg-blue-50/70 border border-blue-100' : 'bg-[#F5F7FA]'}`}>
-                                {a.unread && <span className="w-2 h-2 mt-1.5 rounded-full bg-[#2D7FF9] flex-shrink-0" />}
-                                <div>
-                                    <p className="text-sm text-slate-700">{a.text}</p>
-                                    <p className="text-xs text-slate-400 mt-1">{a.time}</p>
-                                </div>
+                <SectionCard title="Announcements">
+                    <div className="space-y-4">
+                        {loadingAnnouncements ? (
+                            <div className="flex items-center justify-center py-4">
+                                <Loader2 className="w-5 h-5 animate-spin text-slate-300" />
                             </div>
-                        ))}
+                        ) : announcements.length === 0 ? (
+                            <p className="text-xs text-slate-400 italic py-2">No new announcements.</p>
+                        ) : announcements.map((a, i) => {
+                            const unread = !a.readBy || !a.readBy.includes(user?.uid)
+                            return (
+                                <div key={i} className="flex gap-4 items-start group cursor-pointer" onClick={() => navigate('/student/dashboard?tab=messages')}>
+                                    <div className={`w-2 h-2 mt-2 rounded-full shrink-0 ${unread ? 'bg-[#2D7FF9]' : 'bg-slate-200'}`} />
+                                    <div>
+                                        <p className={`text-sm leading-relaxed ${unread ? 'font-bold text-[#0B3C6F]' : 'text-slate-600'}`}>{a.subject}</p>
+                                        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-tight mt-1">{fmtTime(a.sentAt)}</p>
+                                    </div>
+                                </div>
+                            )
+                        })}
                     </div>
                 </SectionCard>
             </div>
@@ -184,187 +227,178 @@ function DashboardView({ profile, navigate }: { profile: any; navigate: (path: s
     )
 }
 
-function MyProgramsView({ profile }: { profile: any }) {
+function MyLearningView({ profile, courses }: { profile: any; courses: any[] }) {
+    const enrolledProgram = profile?.program
+    const courseDetails = courses.find(c => c.name === enrolledProgram)
+
     return (
         <div className="space-y-6">
-            <SectionCard title="Enrolled Programs">
-                {profile?.program ? (
-                    <div className="border border-[#E0E6ED] rounded-lg overflow-hidden">
-                        <div className="flex items-center justify-between p-4 border-b border-[#E0E6ED] bg-[#F5F7FA]">
-                            <div className="flex items-center gap-3">
-                                <span className="text-2xl">{PROGRAM_ICONS[profile.program] ?? '📚'}</span>
-                                <div>
-                                    <p className="font-semibold text-[#0B3C6F]">{profile.program}</p>
-                                    <p className="text-sm text-slate-400">Intensive · 2025</p>
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <div className="lg:col-span-2 space-y-6">
+                    <SectionCard title="Active Program">
+                        {enrolledProgram ? (
+                            <div className="border border-[#E0E6ED] rounded-xl overflow-hidden bg-white">
+                                <div className="flex flex-col sm:flex-row sm:items-center justify-between p-5 border-b border-[#E0E6ED] bg-[#F8FAFC] gap-4">
+                                    <div className="flex items-center gap-4">
+                                        <div className="w-12 h-12 rounded-xl bg-white border border-[#E0E6ED] flex items-center justify-center text-2xl shadow-sm">
+                                            {PROGRAM_ICONS[enrolledProgram] ?? '📚'}
+                                        </div>
+                                        <div>
+                                            <p className="font-bold text-[#0B3C6F] text-lg">{enrolledProgram}</p>
+                                            <p className="text-xs text-slate-400 font-medium uppercase tracking-wider">Cohort 2025 • {courseDetails?.format || 'Standard'}</p>
+                                        </div>
+                                    </div>
+                                    <Badge color="bg-emerald-50 text-emerald-700 border border-emerald-100 px-3 py-1">{courseDetails?.price ? 'Enrolled' : 'Direct Enrollment'}</Badge>
+                                </div>
+                                <div className="p-6">
+                                    <div className="flex justify-between items-end mb-3">
+                                        <div>
+                                            <p className="text-sm font-bold text-slate-500">Course Completion</p>
+                                            <p className="text-2xl font-bold text-[#0B3C6F]">{profile?.progress || 0}%</p>
+                                        </div>
+                                        <p className="text-xs font-bold text-slate-400 uppercase tracking-tight">{profile?.modulesCompleted || 0} of {profile?.totalModules || 12} Modules</p>
+                                    </div>
+                                    <div className="w-full bg-[#F1F5F9] rounded-full h-2 overflow-hidden">
+                                        <div className="bg-[#2D7FF9] h-full rounded-full transition-all duration-500" style={{ width: `${profile?.progress || 0}%` }} />
+                                    </div>
                                 </div>
                             </div>
-                            <Badge color="bg-emerald-50 text-emerald-700 border border-emerald-200">Active</Badge>
-                        </div>
-                        <div className="p-4 grid grid-cols-3 gap-4 text-center">
-                            {[['Modules', '12'], ['Completed', '0'], ['Progress', '0%']].map(([k, v]) => (
-                                <div key={k}>
-                                    <p className="text-xl font-bold text-[#0B3C6F]">{v}</p>
-                                    <p className="text-xs text-slate-400 mt-0.5">{k}</p>
+                        ) : (
+                            <div className="text-center py-10 border-2 border-dashed border-[#E0E6ED] rounded-xl">
+                                <GraduationCap className="w-10 h-10 text-slate-300 mx-auto mb-3" />
+                                <p className="text-slate-400 italic">No programs enrolled yet.</p>
+                            </div>
+                        )}
+                    </SectionCard>
+
+                    <SectionCard title="Program Curriculum">
+                        <div className="space-y-3">
+                            {[
+                                { week: 'Week 1–2', topic: 'Introduction & Foundations', status: 'completed' },
+                                { week: 'Week 3–4', topic: 'Core Concepts & Methods', status: 'in-progress' },
+                                { week: 'Week 5–6', topic: 'Hands-On Projects', status: 'upcoming' },
+                                { week: 'Week 7–8', topic: 'Advanced Topics', status: 'upcoming' },
+                                { week: 'Week 9–10', topic: 'Capstone & Presentation', status: 'upcoming' },
+                            ].map((item, i) => (
+                                <div key={i} className={`flex items-center gap-4 p-4 border rounded-xl transition-all ${item.status === 'completed' ? 'bg-emerald-50/30 border-emerald-100' : item.status === 'in-progress' ? 'bg-blue-50/30 border-[#2D7FF9]/20 ring-1 ring-[#2D7FF9]/10' : 'bg-white border-[#E0E6ED]'}`}>
+                                    <div className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold shadow-sm ${item.status === 'completed' ? 'bg-emerald-500 text-white' : item.status === 'in-progress' ? 'bg-[#2D7FF9] text-white' : 'bg-slate-100 border border-slate-200 text-slate-400'}`}>
+                                        {item.status === 'completed' ? '✓' : i + 1}
+                                    </div>
+                                    <div className="flex-1">
+                                        <p className={`text-sm font-bold ${item.status === 'upcoming' ? 'text-slate-500' : 'text-[#0B3C6F]'}`}>{item.topic}</p>
+                                        <p className="text-xs text-slate-400 mt-0.5 font-medium">{item.week}</p>
+                                    </div>
+                                    <Badge color={item.status === 'completed' ? 'bg-emerald-100 text-emerald-700' : item.status === 'in-progress' ? 'bg-blue-100 text-blue-700' : 'bg-slate-50 text-slate-400'}>
+                                        {item.status.replace('-', ' ')}
+                                    </Badge>
                                 </div>
                             ))}
                         </div>
-                        <div className="px-4 pb-4">
-                            <div className="w-full bg-[#E0E6ED] rounded-full h-2">
-                                <div className="bg-[#2D7FF9] h-2 rounded-full" style={{ width: '0%' }} />
-                            </div>
-                            <p className="text-xs text-slate-400 mt-1">0% complete</p>
-                        </div>
-                    </div>
-                ) : (
-                    <p className="text-sm text-slate-400 italic">No programs enrolled yet.</p>
-                )}
-            </SectionCard>
-
-            <SectionCard title="Program Curriculum">
-                <div className="space-y-2">
-                    {[
-                        { week: 'Week 1–2', topic: 'Introduction & Foundations', status: 'upcoming' },
-                        { week: 'Week 3–4', topic: 'Core Concepts & Methods', status: 'upcoming' },
-                        { week: 'Week 5–6', topic: 'Hands-On Projects', status: 'upcoming' },
-                        { week: 'Week 7–8', topic: 'Advanced Topics', status: 'upcoming' },
-                        { week: 'Week 9–10', topic: 'Capstone & Presentation', status: 'upcoming' },
-                    ].map((item, i) => (
-                        <div key={i} className="flex items-center gap-4 p-3 border border-[#E0E6ED] rounded-lg">
-                            <div className="w-8 h-8 rounded-full bg-[#F5F7FA] border border-[#E0E6ED] flex items-center justify-center text-xs font-bold text-slate-400">{i + 1}</div>
-                            <div className="flex-1">
-                                <p className="text-sm font-medium text-[#0B3C6F]">{item.topic}</p>
-                                <p className="text-xs text-slate-400">{item.week}</p>
-                            </div>
-                            <Badge color="bg-slate-100 text-slate-500">Upcoming</Badge>
-                        </div>
-                    ))}
+                    </SectionCard>
                 </div>
-            </SectionCard>
+
+                <div className="space-y-6">
+                    <SectionCard title="Certificates">
+                        <div className="space-y-4">
+                            {[
+                                { name: 'Data Analytics Intro', status: 'Earned', date: 'Feb 2025' },
+                                { name: 'DSSL Professional', status: 'Locked', date: '--' },
+                            ].map((cert, i) => (
+                                <div key={i} className={`p-4 rounded-xl border flex flex-col items-center text-center gap-3 ${cert.status === 'Earned' ? 'bg-amber-50/50 border-amber-100' : 'bg-slate-50 border-slate-200'}`}>
+                                    <Award className={`w-8 h-8 ${cert.status === 'Earned' ? 'text-amber-500' : 'text-slate-300'}`} />
+                                    <div>
+                                        <p className="text-xs font-bold text-[#0B3C6F] leading-tight">{cert.name}</p>
+                                        <p className="text-[10px] text-slate-400 mt-1 font-bold">{cert.date}</p>
+                                    </div>
+                                    <Badge color={cert.status === 'Earned' ? 'bg-amber-500 text-white' : 'bg-slate-200 text-slate-500'}>
+                                        {cert.status}
+                                    </Badge>
+                                </div>
+                            ))}
+                        </div>
+                    </SectionCard>
+
+                    <SectionCard title="Learning Stats">
+                        <div className="space-y-4">
+                            {[
+                                { label: 'Modules', value: 2, total: 12, color: 'bg-emerald-500' },
+                                { label: 'Projects', value: 1, total: 4, color: 'bg-blue-500' },
+                                { label: 'Quizzes', value: 3, total: 10, color: 'bg-indigo-500' },
+                            ].map(p => (
+                                <div key={p.label} className="space-y-1.5">
+                                    <div className="flex justify-between text-[11px] font-bold uppercase tracking-wider text-slate-400">
+                                        <span>{p.label}</span>
+                                        <span className="text-slate-600">{p.value}/{p.total}</span>
+                                    </div>
+                                    <div className="w-full bg-slate-100 rounded-full h-1.5">
+                                        <div className={`${p.color} h-full rounded-full`} style={{ width: `${(p.value / p.total) * 100}%` }} />
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </SectionCard>
+                </div>
+            </div>
         </div>
     )
 }
 
-function ResourcesView() {
-    const resources = [
-        { title: 'Data Science Fundamentals PDF', type: 'PDF', size: '2.4 MB', category: 'Reading' },
-        { title: 'Python for Data Analysis – Notebook', type: 'Notebook', size: '1.1 MB', category: 'Lab' },
-        { title: 'Statistics Refresher Slides', type: 'Slides', size: '3.8 MB', category: 'Reading' },
-        { title: 'Introduction to ML – Video', type: 'Video', size: '—', category: 'Video' },
-        { title: 'Capstone Project Template', type: 'DOCX', size: '0.5 MB', category: 'Template' },
+function ResourcesView({ resources }: { resources: any[] }) {
+    const displayResources = resources.length > 0 ? resources : [
+        { title: 'Data Science Fundamentals', type: 'PDF', size: '2.4 MB' },
+        { title: 'Python for Data Analysis', type: 'Lab Notebook', size: '1.1 MB' },
+        { title: 'Statistics Refresher', type: 'Slides', size: '3.8 MB' },
+        { title: 'Intro to Machine Learning', type: 'Video', size: '45 min' },
     ]
+
     return (
         <div className="space-y-6">
             <SectionCard title="Learning Resources">
-                <div className="space-y-2">
-                    {resources.map((r, i) => (
-                        <div key={i} className="flex items-center gap-4 p-3 border border-[#E0E6ED] rounded-lg hover:border-[#2D7FF9]/40 transition group">
-                            <div className="w-10 h-10 bg-[#F5F7FA] rounded-lg flex items-center justify-center flex-shrink-0">
-                                <BookMarked className="w-5 h-5 text-[#2D7FF9]" />
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    {displayResources.map((r, i) => (
+                        <div key={i} className="flex items-center gap-4 p-4 border border-[#E0E6ED] rounded-xl hover:bg-[#F8FAFC] transition group bg-white">
+                            <div className="w-10 h-10 bg-[#F1F5F9] rounded-lg flex items-center justify-center group-hover:bg-white transition">
+                                <FileText className="w-5 h-5 text-[#2D7FF9]" />
                             </div>
                             <div className="flex-1 min-w-0">
-                                <p className="text-sm font-medium text-[#0B3C6F] truncate">{r.title}</p>
-                                <p className="text-xs text-slate-400">{r.type} · {r.size}</p>
+                                <p className="text-sm font-bold text-[#0B3C6F] truncate">{r.title}</p>
+                                <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest leading-none">{r.type} • {r.size}</p>
                             </div>
-                            <Badge color="bg-blue-50 text-blue-600">{r.category}</Badge>
-                            <button className="opacity-0 group-hover:opacity-100 transition text-slate-400 hover:text-[#2D7FF9]">
+                            <button className="p-2 text-slate-300 hover:text-[#2D7FF9] transition">
                                 <Download className="w-4 h-4" />
                             </button>
                         </div>
                     ))}
                 </div>
             </SectionCard>
-
-            <SectionCard title="External Links">
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    {[
-                        { label: 'Kaggle Datasets', url: 'https://www.kaggle.com/datasets' },
-                        { label: 'Google Colab', url: 'https://colab.research.google.com' },
-                        { label: 'Towards Data Science', url: 'https://towardsdatascience.com' },
-                        { label: 'DataCamp Courses', url: 'https://www.datacamp.com' },
-                    ].map(link => (
-                        <a key={link.label} href={link.url} target="_blank" rel="noopener noreferrer"
-                            className="flex items-center gap-3 p-3 border border-[#E0E6ED] rounded-lg hover:border-[#2D7FF9]/50 hover:bg-blue-50/30 transition text-sm text-[#0B3C6F] font-medium">
-                            <ExternalLink className="w-4 h-4 text-[#2D7FF9]" />
-                            {link.label}
-                        </a>
-                    ))}
-                </div>
-            </SectionCard>
         </div>
     )
 }
 
-function ScheduleView() {
-    const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+function ScheduleView({ schedule }: { schedule: any[] }) {
+    const displaySchedule = schedule.length > 0 ? schedule : [
+        { dateStr: 'Mar 12', day: 'Wed', time: '10:00 AM', topic: 'Data Visualization Workshop', location: 'Zoom' },
+        { dateStr: 'Mar 15', day: 'Sat', time: '2:00 PM', topic: 'Python Q&A Session', location: 'Zoom' },
+    ]
+
     return (
         <div className="space-y-6">
             <SectionCard title="Upcoming Sessions">
-                <div className="space-y-3">
-                    {[
-                        { date: 'Mar 3, 2025', time: '10:00 AM – 12:00 PM', session: 'Data Analytics Intro Session', location: 'Online (Zoom)' },
-                        { date: 'Mar 7, 2025', time: '2:00 PM – 4:00 PM', session: 'Python Crash Course', location: 'Online (Zoom)' },
-                        { date: 'Mar 10, 2025', time: '11:00 AM – 1:00 PM', session: 'Workshop: Data Visualization', location: 'In-Person, Freetown' },
-                    ].map((e, i) => (
-                        <div key={i} className="flex gap-4 p-4 border border-[#E0E6ED] rounded-lg hover:border-[#2D7FF9]/40 transition">
-                            <div className="text-center w-14 flex-shrink-0">
-                                <div className="bg-[#0B3C6F] text-white text-xs font-bold py-1 rounded-t-md">{e.date.split(' ')[0]}</div>
-                                <div className="border border-t-0 border-[#E0E6ED] rounded-b-md py-2">
-                                    <p className="text-lg font-bold text-[#0B3C6F]">{e.date.split(' ')[1].replace(',', '')}</p>
-                                </div>
-                            </div>
-                            <div>
-                                <p className="font-semibold text-[#0B3C6F] text-sm">{e.session}</p>
-                                <p className="text-xs text-slate-400 mt-1"><Clock className="w-3 h-3 inline mr-1" />{e.time}</p>
-                                <p className="text-xs text-slate-400 mt-0.5">{e.location}</p>
-                            </div>
-                        </div>
-                    ))}
-                </div>
-            </SectionCard>
-
-            <SectionCard title="Weekly Calendar">
-                <div className="grid grid-cols-7 gap-1">
-                    {days.map(d => (
-                        <div key={d} className="text-center text-xs font-semibold text-slate-400 pb-2">{d}</div>
-                    ))}
-                    {Array.from({ length: 28 }, (_, i) => (
-                        <div key={i} className={`text-center py-2 text-sm rounded-md cursor-default ${i === 2 || i === 6 ? 'bg-[#2D7FF9] text-white font-bold' : 'text-slate-600 hover:bg-[#F5F7FA]'
-                            }`}>{i + 1}</div>
-                    ))}
-                </div>
-            </SectionCard>
-        </div>
-    )
-}
-
-function CertificatesView() {
-    return (
-        <div className="space-y-6">
-            <SectionCard title="Earned Certificates">
-                <div className="py-12 text-center">
-                    <Award className="w-14 h-14 text-[#E0E6ED] mx-auto mb-3" />
-                    <p className="text-base font-semibold text-slate-500">No certificates yet</p>
-                    <p className="text-sm text-slate-400 mt-1">Complete your program modules to earn your first certificate.</p>
-                </div>
-            </SectionCard>
-            <SectionCard title="Available Certifications">
-                <div className="space-y-3">
-                    {[
-                        { name: 'Data Analytics Fundamentals', modules: '12 modules', status: 'In Progress' },
-                        { name: 'Python for Data Science', modules: '8 modules', status: 'Locked' },
-                        { name: 'Machine Learning Essentials', modules: '10 modules', status: 'Locked' },
-                    ].map((cert, i) => (
-                        <div key={i} className="flex items-center gap-4 p-3 border border-[#E0E6ED] rounded-lg">
-                            <div className="w-10 h-10 bg-amber-50 rounded-lg flex items-center justify-center">
-                                <Award className="w-5 h-5 text-amber-500" />
+                <div className="space-y-4">
+                    {displaySchedule.map((s, i) => (
+                        <div key={i} className="flex items-center gap-5 p-5 border border-[#E0E6ED] rounded-xl bg-white hover:border-[#2D7FF9]/20 hover:shadow-sm transition">
+                            <div className="w-14 h-14 rounded-xl bg-[#F8FAFC] border border-[#E0E6ED] flex flex-col items-center justify-center text-[#0B3C6F]">
+                                <span className="text-[10px] font-bold uppercase tracking-widest leading-none opacity-50">{s.day}</span>
+                                <span className="text-xl font-bold leading-none mt-1">{(s.dateStr || '').split(' ')[1] || (s.date && new Date(s.date.seconds * 1000).getDate())}</span>
                             </div>
                             <div className="flex-1">
-                                <p className="text-sm font-medium text-[#0B3C6F]">{cert.name}</p>
-                                <p className="text-xs text-slate-400">{cert.modules}</p>
+                                <p className="text-base font-bold text-[#0B3C6F]">{s.topic}</p>
+                                <div className="flex items-center gap-4 mt-1.5">
+                                    <span className="text-xs text-slate-400 flex items-center gap-1.5 font-medium"><Clock className="w-3.5 h-3.5" /> {s.time}</span>
+                                    <span className="text-xs text-slate-400 flex items-center gap-1.5 font-medium"><Globe className="w-3.5 h-3.5" /> {s.location}</span>
+                                </div>
                             </div>
-                            <Badge color={cert.status === 'In Progress' ? 'bg-blue-50 text-blue-700' : 'bg-slate-100 text-slate-400'}>
-                                {cert.status}
-                            </Badge>
+                            <Badge color="bg-emerald-50 text-emerald-600 border border-emerald-100 font-bold">Standard</Badge>
                         </div>
                     ))}
                 </div>
@@ -373,77 +407,83 @@ function CertificatesView() {
     )
 }
 
-function ProgressView() {
-    return (
-        <div className="space-y-6">
-            <SectionCard title="Overall Progress">
-                <div className="flex items-center gap-6">
-                    <div className="relative w-24 h-24 flex-shrink-0">
-                        <svg viewBox="0 0 36 36" className="w-24 h-24 -rotate-90">
-                            <circle cx="18" cy="18" r="15.9" fill="none" stroke="#E0E6ED" strokeWidth="3.2" />
-                            <circle cx="18" cy="18" r="15.9" fill="none" stroke="#2D7FF9" strokeWidth="3.2" strokeDasharray="0 100" strokeLinecap="round" />
-                        </svg>
-                        <div className="absolute inset-0 flex items-center justify-center">
-                            <span className="text-xl font-bold text-[#0B3C6F]">0%</span>
-                        </div>
-                    </div>
-                    <div className="flex-1 space-y-2">
-                        {[
-                            { label: 'Modules Completed', value: 0, total: 12 },
-                            { label: 'Assignments Done', value: 0, total: 8 },
-                            { label: 'Attendance', value: 0, total: 10 },
-                        ].map(p => (
-                            <div key={p.label}>
-                                <div className="flex justify-between text-xs text-slate-500 mb-1">
-                                    <span>{p.label}</span>
-                                    <span>{p.value}/{p.total}</span>
-                                </div>
-                                <div className="w-full bg-[#E0E6ED] rounded-full h-1.5">
-                                    <div className="bg-[#2D7FF9] h-1.5 rounded-full" style={{ width: `${(p.value / p.total) * 100}%` }} />
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-            </SectionCard>
+function PaymentsView({ payments }: { payments: any[] }) {
+    const completed = payments.filter(p => p.status?.toLowerCase() === 'completed')
+    const pending = payments.filter(p => p.status?.toLowerCase() === 'pending')
+    const refunded = payments.filter(p => p.status?.toLowerCase() === 'refunded')
 
-            <SectionCard title="Recent Activity">
-                <div className="py-8 text-center">
-                    <TrendingUp className="w-10 h-10 text-[#E0E6ED] mx-auto mb-2" />
-                    <p className="text-sm text-slate-400">No activity yet — your learning journey begins here!</p>
-                </div>
-            </SectionCard>
-        </div>
-    )
-}
+    const totalPaid = completed.reduce((s, p) => s + (p.amount ?? 0), 0)
+    const totalPending = pending.reduce((s, p) => s + (p.amount ?? 0), 0)
+    const totalRefunded = refunded.reduce((s, p) => s + (p.amount ?? 0), 0)
 
-function PaymentsView() {
+    const fmt = (n: number) => `SLE ${n.toLocaleString()}`
+
     return (
         <div className="space-y-6">
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 {[
-                    { label: 'Total Paid', value: 'SLE 0', color: 'bg-[#0B3C6F]' },
-                    { label: 'Pending', value: 'SLE 0', color: 'bg-amber-500' },
-                    { label: 'Refunded', value: 'SLE 0', color: 'bg-slate-400' },
+                    { label: 'Total Paid', value: fmt(totalPaid), color: 'bg-[#0B3C6F]' },
+                    { label: 'Pending', value: fmt(totalPending), color: 'bg-amber-500' },
+                    { label: 'Refunded', value: fmt(totalRefunded), color: 'bg-slate-400' },
                 ].map(s => (
-                    <div key={s.label} className="bg-white rounded-lg border border-[#E0E6ED] shadow-sm p-4 flex items-center gap-3">
-                        <div className={`w-2 h-10 rounded-full flex-shrink-0 ${s.color}`} />
+                    <div key={s.label} className="bg-white rounded-xl border border-[#E0E6ED] p-5 flex items-center gap-4 hover:shadow-sm transition">
+                        <div className={`w-1.5 h-10 rounded-full flex-shrink-0 ${s.color}`} />
                         <div>
                             <p className="text-xl font-bold text-[#0B3C6F]">{s.value}</p>
-                            <p className="text-xs text-slate-400">{s.label}</p>
+                            <p className="text-xs text-slate-400 font-medium">{s.label}</p>
                         </div>
                     </div>
                 ))}
             </div>
 
             <SectionCard title="Payment History">
-                <div className="py-8 text-center">
-                    <CreditCard className="w-10 h-10 text-[#E0E6ED] mx-auto mb-2" />
-                    <p className="text-sm text-slate-400 mb-4">No payment records found.</p>
-                    <button className="h-10 px-5 bg-[#2D7FF9] text-white text-sm font-semibold rounded-md hover:bg-[#1B6AE0] transition">
-                        Pay for a Course
-                    </button>
-                </div>
+                {payments.length === 0 ? (
+                    <div className="py-8 text-center">
+                        <CreditCard className="w-10 h-10 text-[#E0E6ED] mx-auto mb-2" />
+                        <p className="text-sm text-slate-400 mb-4">No payment records found.</p>
+                        <button className="h-10 px-5 bg-[#2D7FF9] text-white text-sm font-semibold rounded-md hover:bg-[#1B6AE0] transition">
+                            Pay for a Course
+                        </button>
+                    </div>
+                ) : (
+                    <div className="overflow-x-auto -mx-6 px-6">
+                        <table className="w-full text-left border-collapse">
+                            <thead>
+                                <tr className="border-b border-[#F1F5F9]">
+                                    <th className="py-3 text-[10px] font-bold text-slate-400 uppercase tracking-widest leading-none">Reference</th>
+                                    <th className="py-3 text-[10px] font-bold text-slate-400 uppercase tracking-widest leading-none">Program</th>
+                                    <th className="py-3 text-[10px] font-bold text-slate-400 uppercase tracking-widest leading-none">Amount</th>
+                                    <th className="py-3 text-[10px] font-bold text-slate-400 uppercase tracking-widest leading-none text-right">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody className="divide-y divide-[#F1F5F9]">
+                                {payments.map((p, i) => (
+                                    <tr key={i} className="group hover:bg-[#F8FAFC] transition-colors">
+                                        <td className="py-4">
+                                            <p className="text-xs font-bold text-[#0B3C6F] uppercase">#{p.reference?.slice(-6) || p.id.slice(-6)}</p>
+                                            <p className="text-[10px] text-slate-400 mt-1 font-medium">{p.created_at?.seconds ? new Date(p.created_at.seconds * 1000).toLocaleDateString() : 'N/A'}</p>
+                                        </td>
+                                        <td className="py-4">
+                                            <p className="text-xs font-bold text-[#0B3C6F]">{p.program_name || 'Course'}</p>
+                                        </td>
+                                        <td className="py-4 text-xs font-bold text-[#0B3C6F]">
+                                            {p.currency} {p.amount?.toLocaleString()}
+                                        </td>
+                                        <td className="py-4 text-right">
+                                            <Badge color={
+                                                p.status === 'completed' ? 'bg-emerald-50 text-emerald-600' :
+                                                    p.status === 'pending' ? 'bg-amber-50 text-amber-600' :
+                                                        'bg-slate-50 text-slate-400'
+                                            }>
+                                                {p.status || 'Draft'}
+                                            </Badge>
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
+                )}
             </SectionCard>
         </div>
     )
@@ -651,18 +691,18 @@ function MessagesView() {
                                         </div>
                                         <div className="flex-1 min-w-0">
                                             <div className="flex items-center justify-between gap-2">
-                                                <p className={`text-sm font-semibold ${unread ? 'text-[#0B3C6F]' : 'text-slate-600'}`}>
+                                                <p className={`text-sm font-bold ${unread ? 'text-[#0B3C6F]' : 'text-slate-600'}`}>
                                                     {msg.sentBy || 'DSSL Admin'}
                                                     {msg.recipientType === 'all' && (
-                                                        <span className="ml-2 text-xs bg-blue-100 text-blue-600 px-1.5 py-0.5 rounded-full font-medium">Broadcast</span>
+                                                        <span className="ml-2 text-[10px] bg-blue-50 text-[#2D7FF9] px-2 py-0.5 rounded-full font-bold uppercase tracking-wider">Broadcast</span>
                                                     )}
                                                     {threadReplies.length > 0 && (
-                                                        <span className="ml-2 text-xs bg-slate-100 text-slate-500 px-1.5 py-0.5 rounded-full font-medium">{threadReplies.length} reply</span>
+                                                        <span className="ml-2 text-[10px] bg-slate-100 text-slate-500 px-2 py-0.5 rounded-full font-bold uppercase tracking-wider">{threadReplies.length} reply</span>
                                                     )}
                                                 </p>
-                                                <p className="text-xs text-slate-400 flex-shrink-0">{fmtTime(msg.sentAt)}</p>
+                                                <p className="text-[10px] text-slate-400 font-bold uppercase tracking-tight flex-shrink-0">{fmtTime(msg.sentAt)}</p>
                                             </div>
-                                            <p className={`text-sm truncate ${unread ? 'font-semibold text-slate-700' : 'text-slate-500'}`}>{msg.subject}</p>
+                                            <p className={`text-sm truncate mt-0.5 ${unread ? 'font-bold text-slate-700' : 'text-slate-500'}`}>{msg.subject}</p>
                                         </div>
                                         {unread && <span className="w-2 h-2 rounded-full bg-[#2D7FF9] flex-shrink-0 mt-2" />}
                                     </div>
@@ -730,70 +770,94 @@ function MessagesView() {
 }
 
 
-function ProfileSettingsView({ profile }: { profile: any }) {
+function UnifiedProfileView({ profile }: { profile: any }) {
     return (
         <div className="space-y-6">
-            <SectionCard title="Personal Information">
-                <div className="flex items-center gap-5 pb-5 border-b border-[#E0E6ED] mb-5">
-                    <div className="w-16 h-16 rounded-full bg-[#2D7FF9] flex items-center justify-center text-2xl font-bold text-white">
-                        {profile?.name?.charAt(0).toUpperCase() ?? 'S'}
-                    </div>
-                    <div>
-                        <p className="text-lg font-semibold text-[#0B3C6F]">{profile?.name ?? 'Student'}</p>
-                        <p className="text-sm text-[#2D7FF9]">{profile?.program || 'DSSL Student'}</p>
-                    </div>
-                </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {[
-                        { label: 'Full Name', value: profile?.name ?? '' },
-                        { label: 'Email Address', value: profile?.email ?? '' },
-                        { label: 'Phone Number', value: profile?.phone ?? '' },
-                        { label: 'Program', value: profile?.program ?? '' },
-                    ].map(f => (
-                        <div key={f.label}>
-                            <label className="block text-xs font-semibold text-slate-500 mb-1.5 uppercase tracking-wide">{f.label}</label>
-                            <input readOnly defaultValue={f.value}
-                                className="w-full h-10 border border-[#E0E6ED] rounded-md px-3 text-sm text-slate-600 bg-[#F5F7FA]" />
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <div className="lg:col-span-2 space-y-6">
+                    <SectionCard title="Personal Information">
+                        <div className="flex items-center gap-5 pb-6 border-b border-[#E0E6ED] mb-6">
+                            <div className="w-16 h-16 rounded-xl bg-[#2D7FF9] flex items-center justify-center text-2xl font-bold text-white shadow-sm border-2 border-[#E0E6ED]">
+                                {profile?.name?.charAt(0).toUpperCase() ?? 'S'}
+                            </div>
+                            <div className="space-y-0.5">
+                                <p className="text-lg font-bold text-[#0B3C6F] tracking-tight">{profile?.name ?? 'Student'}</p>
+                                <p className="text-sm font-bold text-[#2D7FF9]">{profile?.program || 'Active Student'}</p>
+                                <p className="text-xs text-slate-400">ID: DSSL-{Math.floor(1000 + Math.random() * 9000)}</p>
+                            </div>
                         </div>
-                    ))}
-                </div>
-                <p className="text-xs text-slate-400 mt-4">To update your profile details, please contact the DSSL administration team.</p>
-            </SectionCard>
-        </div>
-    )
-}
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            {[
+                                { label: 'Full Name', value: profile?.name ?? '' },
+                                { label: 'Email Address', value: profile?.email ?? '' },
+                                { label: 'Phone Number', value: profile?.phone ?? '' },
+                                { label: 'Base Program', value: profile?.program ?? '' },
+                            ].map(f => (
+                                <div key={f.label} className="space-y-1.5">
+                                    <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider leading-none">{f.label}</label>
+                                    <input readOnly defaultValue={f.value}
+                                        className="w-full h-11 border border-[#E0E6ED] rounded-xl px-4 text-sm font-medium text-slate-600 bg-[#F8FAFC]" />
+                                </div>
+                            ))}
+                        </div>
+                        <div className="mt-8 p-4 bg-slate-50 rounded-xl border border-slate-100 flex gap-3">
+                            <Info className="w-5 h-5 text-blue-500 shrink-0" />
+                            <p className="text-xs text-slate-500 leading-relaxed font-medium">To update your official profile details or change your enrolled program, please contact the support team.</p>
+                        </div>
+                    </SectionCard>
 
-function SettingsView() {
-    return (
-        <div className="space-y-6">
-            <SectionCard title="Notification Preferences">
-                {[
-                    { label: 'Email Notifications', desc: 'Receive updates about your courses via email', enabled: true },
-                    { label: 'SMS Alerts', desc: 'Receive session reminders via SMS', enabled: false },
-                    { label: 'News & Announcements', desc: 'DSSL newsletter and event updates', enabled: true },
-                ].map((s, i) => (
-                    <div key={i} className="flex items-center justify-between py-3 border-b border-[#E0E6ED] last:border-0">
-                        <div>
-                            <p className="text-sm font-medium text-[#0B3C6F]">{s.label}</p>
-                            <p className="text-xs text-slate-400 mt-0.5">{s.desc}</p>
+                    <SectionCard title="Security & Account">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <button className="flex items-center justify-between p-4 border border-[#E0E6ED] rounded-xl text-sm font-bold text-[#0B3C6F] hover:bg-[#F8FAFC] transition group text-left">
+                                <div className="flex items-center gap-3">
+                                    <div className="w-8 h-8 rounded-lg bg-slate-100 flex items-center justify-center group-hover:bg-white transition">
+                                        <Zap className="w-4 h-4" />
+                                    </div>
+                                    Change Password
+                                </div>
+                                <ChevronDown className="w-4 h-4 -rotate-90 text-slate-300" />
+                            </button>
+                            <button className="flex items-center justify-between p-4 border border-[#E0E6ED] rounded-xl text-sm font-bold text-[#0B3C6F] hover:bg-[#F8FAFC] transition group text-left">
+                                <div className="flex items-center gap-3">
+                                    <div className="w-8 h-8 rounded-lg bg-slate-100 flex items-center justify-center group-hover:bg-white transition">
+                                        <CheckCircle className="w-4 h-4" />
+                                    </div>
+                                    Two-Factor Auth
+                                </div>
+                                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Disabled</span>
+                            </button>
                         </div>
-                        <div className={`relative w-10 h-5 rounded-full transition ${s.enabled ? 'bg-[#2D7FF9]' : 'bg-[#E0E6ED]'}`}>
-                            <div className={`absolute top-0.5 w-4 h-4 bg-white rounded-full shadow transition-all ${s.enabled ? 'left-5' : 'left-0.5'}`} />
-                        </div>
-                    </div>
-                ))}
-            </SectionCard>
-
-            <SectionCard title="Security">
-                <div className="space-y-3">
-                    <button className="w-full text-left p-3 border border-[#E0E6ED] rounded-lg text-sm font-medium text-[#0B3C6F] hover:border-[#2D7FF9]/40 transition">
-                        Change Password
-                    </button>
-                    <button className="w-full text-left p-3 border border-[#E0E6ED] rounded-lg text-sm font-medium text-[#0B3C6F] hover:border-[#2D7FF9]/40 transition">
-                        Two-Factor Authentication
-                    </button>
+                    </SectionCard>
                 </div>
-            </SectionCard>
+
+                <div className="space-y-6">
+                    <SectionCard title="Preferences">
+                        <div className="space-y-4">
+                            {[
+                                { label: 'Email Updates', desc: 'Course announcements', enabled: true },
+                                { label: 'SMS Alerts', desc: 'Session reminders', enabled: false },
+                                { label: 'Newsletter', desc: 'DSSL community news', enabled: true },
+                            ].map((s, i) => (
+                                <div key={i} className="flex items-center justify-between pb-4 border-b border-slate-50 last:border-0 last:pb-0">
+                                    <div>
+                                        <p className="text-sm font-bold text-[#0B3C6F]">{s.label}</p>
+                                        <p className="text-[10px] text-slate-400 font-medium">{s.desc}</p>
+                                    </div>
+                                    <button className={`relative w-9 h-5 rounded-full transition-colors duration-200 ${s.enabled ? 'bg-[#2D7FF9]' : 'bg-slate-200'}`}>
+                                        <div className={`absolute top-1 w-3 h-3 bg-white rounded-full transition-all duration-200 ${s.enabled ? 'left-5' : 'left-1'}`} />
+                                    </button>
+                                </div>
+                            ))}
+                        </div>
+                    </SectionCard>
+
+                    <SectionCard title="Account Actions">
+                        <button className="w-full flex items-center gap-3 px-4 py-3 text-sm font-bold text-red-600 hover:bg-red-50 rounded-xl transition duration-200 border border-transparent hover:border-red-100">
+                            <LogOut className="w-4 h-4" /> Sign Out from All Devices
+                        </button>
+                    </SectionCard>
+                </div>
+            </div>
         </div>
     )
 }
@@ -801,11 +865,70 @@ function SettingsView() {
 // ─── Main Dashboard ─────────────────────────────────────────────────
 
 export default function StudentDashboard() {
-    const { profile, signOut } = useAuth()
+    const { user, profile, signOut } = useAuth()
     const navigate = useNavigate()
     const [activeNav, setActiveNav] = useState('dashboard')
-    const [sidebarOpen, setSidebarOpen] = useState(true)
+    const [sidebarOpen, setSidebarOpen] = useState(false)
     const [showUserMenu, setShowUserMenu] = useState(false)
+
+    // Real-time Data
+    const [courses, setCourses] = useState<any[]>([])
+    const [payments, setPayments] = useState<any[]>([])
+    const [unreadMessages, setUnreadMessages] = useState(0)
+    const [resources, setResources] = useState<any[]>([])
+    const [schedule, setSchedule] = useState<any[]>([])
+
+    useEffect(() => {
+        if (window.innerWidth >= 1024) setSidebarOpen(true)
+    }, [])
+
+    // Listen to Courses
+    useEffect(() => {
+        const q = query(collection(db, 'courses'), where('isActive', '==', true))
+        return onSnapshot(q, snap => {
+            setCourses(snap.docs.map(d => ({ id: d.id, ...d.data() })))
+        }, (err) => console.error('Courses error:', err))
+    }, [])
+
+    // Listen to Resources
+    useEffect(() => {
+        const q = query(collection(db, 'resources'), orderBy('createdAt', 'desc'))
+        return onSnapshot(q, snap => {
+            setResources(snap.docs.map(d => ({ id: d.id, ...d.data() })))
+        }, (err) => console.error('Resources error:', err))
+    }, [])
+
+    // Listen to Schedule
+    useEffect(() => {
+        const q = query(collection(db, 'schedule'), orderBy('date', 'asc'))
+        return onSnapshot(q, snap => {
+            setSchedule(snap.docs.map(d => ({ id: d.id, ...d.data() })))
+        }, (err) => console.error('Schedule error:', err))
+    }, [])
+
+    // Listen to Payments
+    useEffect(() => {
+        if (!user) return
+        const q = query(collection(db, 'course_payments'), where('student_id', '==', user.uid))
+        return onSnapshot(q, snap => {
+            setPayments(snap.docs.map(d => ({ id: d.id, ...d.data() })))
+        }, (err) => console.error('Payments error:', err))
+    }, [user])
+
+    // Listen to Unread Messages count
+    useEffect(() => {
+        if (!user) return
+        const q = query(collection(db, 'admin_messages'))
+        return onSnapshot(q, snap => {
+            const unread = snap.docs.filter(d => {
+                const m = d.data() as any
+                const isRecipient = m.recipientType === 'all' || m.recipientId === user.uid
+                const notRead = !m.readBy || !m.readBy.includes(user.uid)
+                return isRecipient && notRead
+            }).length
+            setUnreadMessages(unread)
+        }, (err) => console.error('Unread messages error:', err))
+    }, [user])
 
     const handleSignOut = async () => {
         await signOut()
@@ -813,86 +936,93 @@ export default function StudentDashboard() {
     }
 
     const handleNavClick = (id: string) => {
-        if (id === 'catalog') { navigate('/student/apply'); return }
         setActiveNav(id)
         setShowUserMenu(false)
+        if (window.innerWidth < 1024) setSidebarOpen(false)
     }
 
     const displayName = profile?.name ?? 'Student'
     const displayInitial = displayName.charAt(0).toUpperCase()
 
     const PAGE_TITLES: Record<string, string> = {
-        dashboard: 'Dashboard', programs: 'My Programs', catalog: 'Course Catalog',
-        payments: 'Payments', resources: 'Resources', certificates: 'Certificates',
-        schedule: 'Schedule', progress: 'Progress', messages: 'Messages',
-        'profile-settings': 'My Profile', settings: 'Settings',
+        dashboard: 'Dashboard',
+        learning: 'My Learning',
+        resources: 'Resources',
+        schedule: 'Schedule',
+        payments: 'Payments',
+        messages: 'Messages',
+        profile: 'Profile',
     }
 
     const renderContent = () => {
         switch (activeNav) {
-            case 'programs': return <MyProgramsView profile={profile} />
-            case 'resources': return <ResourcesView />
-            case 'schedule': return <ScheduleView />
-            case 'certificates': return <CertificatesView />
-            case 'progress': return <ProgressView />
-            case 'payments': return <PaymentsView />
+            case 'learning': return <MyLearningView profile={profile} courses={courses} />
+            case 'resources': return <ResourcesView resources={resources} />
+            case 'schedule': return <ScheduleView schedule={schedule} />
+            case 'payments': return <PaymentsView payments={payments} />
             case 'messages': return <MessagesView />
-            case 'profile-settings': return <ProfileSettingsView profile={profile} />
-            case 'settings': return <SettingsView />
-            default: return <DashboardView profile={profile} navigate={navigate} />
+            case 'profile': return <UnifiedProfileView profile={profile} />
+            default: return <DashboardView profile={profile} payments={payments} navigate={navigate} />
         }
     }
 
     return (
-        <div className="min-h-screen bg-[#F5F7FA] font-[Inter,Roboto,sans-serif]">
+        <div className="min-h-screen bg-[#F8FAFC] font-[Inter,Roboto,sans-serif] text-[#0B3C6F]">
+
+            {/* Mobile Sidebar Overlay */}
+            {sidebarOpen && (
+                <div
+                    className="fixed inset-0 bg-[#0B3C6F]/40 backdrop-blur-sm z-[60] lg:hidden animate-in fade-in duration-300"
+                    onClick={() => setSidebarOpen(false)}
+                />
+            )}
 
             {/* FIXED HEADER */}
-            <header className="fixed top-0 left-0 right-0 z-30 h-16 bg-[#0B3C6F] shadow-md flex items-center px-6 gap-4">
-                <div className="flex items-center gap-3 w-[234px] flex-shrink-0">
-                    <button onClick={() => setSidebarOpen(!sidebarOpen)} className="text-white/70 hover:text-white transition">
-                        {sidebarOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+            <header className="fixed top-0 left-0 right-0 z-[70] h-16 bg-[#0B3C6F] border-b border-white/10 flex items-center px-4 lg:px-7 gap-4">
+                <div className="flex items-center gap-3 lg:w-[230px] flex-shrink-0">
+                    <button
+                        onClick={() => setSidebarOpen(!sidebarOpen)}
+                        className="lg:hidden p-2 -ml-2 text-white/70 hover:text-white hover:bg-white/10 rounded-xl transition"
+                    >
+                        {sidebarOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
                     </button>
-                    <img src="/logo.png" alt="DSSL" className="h-9 w-auto object-contain brightness-200" />
+                    <img src="/logo.png" alt="DSSL" className="h-8 lg:h-9 w-auto object-contain brightness-200" />
                 </div>
 
-                <nav className="hidden lg:flex items-center gap-1 flex-1">
-                    {['Home', 'Courses', 'Community', 'Support'].map(item => (
-                        <button key={item} className="px-4 py-1.5 text-sm text-white/70 hover:text-white hover:bg-white/10 rounded-md transition">{item}</button>
-                    ))}
-                </nav>
+                <div className="flex-1 hidden lg:block">
+                    <div className="flex items-center gap-3 pl-5 border-l border-white/10">
+                        <span className="text-white text-sm font-bold tracking-tight">Student Portal</span>
+                    </div>
+                </div>
 
-                <div className="flex items-center gap-2 ml-auto">
-                    <button className="text-white/60 hover:text-white transition p-1.5 hover:bg-white/10 rounded-lg">
-                        <HelpCircle className="w-5 h-5" />
-                    </button>
-                    <button onClick={() => handleNavClick('messages')} className="relative text-white/60 hover:text-white transition p-1.5 hover:bg-white/10 rounded-lg">
+                <div className="flex items-center gap-3 ml-auto">
+                    <button onClick={() => handleNavClick('messages')} className="relative p-2 text-white/50 hover:text-white hover:bg-white/10 rounded-xl transition">
                         <Bell className="w-5 h-5" />
-                        <span className="absolute top-0.5 right-0.5 w-4 h-4 bg-red-500 rounded-full text-white text-[9px] font-bold flex items-center justify-center">2</span>
+                        {unreadMessages > 0 && (
+                            <span className="absolute top-2 right-2 w-2 h-2 bg-[#2D7FF9] rounded-full border-2 border-[#0B3C6F]" />
+                        )}
                     </button>
 
                     <div className="relative">
                         <button onClick={() => setShowUserMenu(!showUserMenu)}
-                            className="flex items-center gap-2 pl-1 pr-3 py-1 rounded-full hover:bg-white/10 transition">
-                            <div className="w-8 h-8 rounded-full bg-[#2D7FF9] flex items-center justify-center text-white text-sm font-bold">{displayInitial}</div>
-                            <span className="text-white text-sm font-medium hidden sm:block max-w-[100px] truncate">{displayName.split(' ')[0]}</span>
-                            <ChevronDown className="w-4 h-4 text-white/60" />
+                            className="flex items-center gap-3 pl-2 pr-3 py-1.5 rounded-xl hover:bg-white/10 transition duration-200">
+                            <div className="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center text-white text-sm font-bold border border-white/10">{displayInitial}</div>
+                            <span className="text-white text-sm font-bold hidden sm:block truncate max-w-[120px]">{displayName.split(' ')[0]}</span>
+                            <ChevronDown className={`w-4 h-4 text-white/40 transition-transform duration-200 ${showUserMenu ? 'rotate-180' : ''}`} />
                         </button>
 
                         {showUserMenu && (
-                            <div className="absolute right-0 top-12 bg-white rounded-lg shadow-xl border border-[#E0E6ED] w-52 overflow-hidden z-50">
-                                <div className="px-4 py-3 border-b border-[#E0E6ED]">
-                                    <p className="text-sm font-semibold text-[#0B3C6F] truncate">{displayName}</p>
-                                    <p className="text-xs text-slate-400 truncate">{profile?.email}</p>
+                            <div className="absolute right-0 top-14 bg-white rounded-2xl shadow-2xl border border-[#E0E6ED] w-56 overflow-hidden z-20 animate-in zoom-in-95 duration-200">
+                                <div className="px-5 py-4 border-b border-[#F1F5F9] bg-[#F8FAFC]">
+                                    <p className="text-sm font-bold text-[#0B3C6F] leading-tight truncate">{displayName}</p>
+                                    <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wide truncate">{profile?.email}</p>
                                 </div>
-                                <div className="py-1">
-                                    <button onClick={() => handleNavClick('profile-settings')} className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-slate-600 hover:bg-[#F5F7FA] transition">
-                                        <User className="w-4 h-4" /> My Profile
+                                <div className="p-2">
+                                    <button onClick={() => handleNavClick('profile')} className="w-full flex items-center gap-3 px-3.5 py-2.5 text-sm font-bold text-slate-600 hover:bg-[#F8FAFC] hover:text-[#2D7FF9] rounded-xl transition duration-200">
+                                        <User className="w-4 h-4" /> Profile Details
                                     </button>
-                                    <button onClick={() => handleNavClick('settings')} className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-slate-600 hover:bg-[#F5F7FA] transition">
-                                        <Settings className="w-4 h-4" /> Settings
-                                    </button>
-                                    <div className="border-t border-[#E0E6ED] my-1" />
-                                    <button onClick={handleSignOut} className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-red-500 hover:bg-red-50 transition">
+                                    <div className="border-t border-[#F1F5F9] my-2" />
+                                    <button onClick={handleSignOut} className="w-full flex items-center gap-3 px-3.5 py-2.5 text-sm font-bold text-red-500 hover:bg-red-50 rounded-xl transition duration-200">
                                         <LogOut className="w-4 h-4" /> Sign Out
                                     </button>
                                 </div>
@@ -903,16 +1033,16 @@ export default function StudentDashboard() {
             </header>
 
             {/* SIDEBAR */}
-            <aside className={`fixed top-16 left-0 h-[calc(100vh-4rem)] bg-[#0B3C6F] z-20 flex flex-col transition-all duration-300 overflow-hidden ${sidebarOpen ? 'w-[250px]' : 'w-0'}`}>
-                <div className="flex-1 overflow-y-auto py-4 px-3 space-y-5">
+            <aside className={`fixed top-16 left-0 h-[calc(100vh-4rem)] bg-[#0B3C6F] z-[65] flex flex-col transition-all duration-300 lg:translate-x-0 ${sidebarOpen ? 'w-[280px] translate-x-0 shadow-2xl lg:shadow-none' : 'w-0 -translate-x-full lg:w-0'}`}>
+                <div className="flex-1 overflow-y-auto py-8 px-4 space-y-8 custom-scrollbar">
                     {NAV_SECTIONS.map(section => (
                         <div key={section.title}>
-                            <p className="text-white/30 text-[10px] font-bold tracking-wider px-4 mb-2">{section.title}</p>
-                            <div className="space-y-0.5">
+                            <p className="text-white/20 text-[10px] font-bold tracking-[0.15em] px-4 mb-4 uppercase leading-none">{section.title}</p>
+                            <div className="space-y-1">
                                 {section.items.map(item => (
                                     <NavItem key={item.id} icon={item.icon} label={item.label}
                                         active={activeNav === item.id}
-                                        badge={item.id === 'messages' ? 2 : undefined}
+                                        badge={item.id === 'messages' ? unreadMessages : undefined}
                                         onClick={() => handleNavClick(item.id)} />
                                 ))}
                             </div>
@@ -920,16 +1050,9 @@ export default function StudentDashboard() {
                     ))}
                 </div>
 
-                <div className="border-t border-white/10 p-3">
-                    <div className="flex items-center gap-3 px-3 py-2 mb-2">
-                        <div className="w-8 h-8 rounded-full bg-[#2D7FF9] flex items-center justify-center text-white text-sm font-bold flex-shrink-0">{displayInitial}</div>
-                        <div className="min-w-0">
-                            <p className="text-white text-sm font-medium truncate">{displayName}</p>
-                            <p className="text-white/40 text-xs truncate">{profile?.email}</p>
-                        </div>
-                    </div>
+                <div className="p-5 border-t border-white/5 bg-black/10">
                     <button onClick={handleSignOut}
-                        className="w-full flex items-center gap-3 px-4 py-2 rounded-md text-sm text-white/50 hover:bg-red-900/30 hover:text-red-300 transition">
+                        className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold text-white/50 hover:bg-red-500/10 hover:text-red-400 transition-all duration-200">
                         <LogOut className="w-4 h-4" />
                         <span>Sign Out</span>
                     </button>
@@ -937,11 +1060,18 @@ export default function StudentDashboard() {
             </aside>
 
             {/* MAIN CONTENT */}
-            <main className={`pt-16 min-h-screen transition-all duration-300 ${sidebarOpen ? 'ml-[250px]' : 'ml-0'}`}>
-                <div className="p-8">
-                    <div className="mb-6">
-                        <h1 className="text-3xl font-bold text-[#0B3C6F]">{PAGE_TITLES[activeNav]}</h1>
-                        <hr className="mt-4 mb-6 border-[#E0E6ED]" />
+            <main className={`pt-16 min-h-screen transition-all duration-300 ${sidebarOpen ? 'lg:ml-[280px]' : 'ml-0'}`}>
+                <div className="p-6 lg:p-12 max-w-[1400px] mx-auto animate-in fade-in slide-in-from-bottom-2 duration-500">
+                    <div className="mb-10 flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+                        <div>
+                            <h1 className="text-3xl font-bold text-[#0B3C6F] tracking-tight leading-none">{PAGE_TITLES[activeNav]}</h1>
+                            <p className="text-slate-400 text-sm font-medium mt-2">DSSL Academy Portal</p>
+                        </div>
+                        <div className="hidden sm:block h-10 w-px bg-slate-200 self-center mx-10" />
+                        <div className="flex items-center gap-3 text-xs font-bold text-slate-400">
+                            <span className="uppercase tracking-widest leading-none">Status:</span>
+                            <Badge color="bg-emerald-500 text-white px-4 py-1.5 rounded-xl">Verified Student</Badge>
+                        </div>
                     </div>
                     {renderContent()}
                 </div>

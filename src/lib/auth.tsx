@@ -8,7 +8,7 @@ import {
     onAuthStateChanged,
     User,
 } from 'firebase/auth'
-import { doc, setDoc, getDoc, serverTimestamp } from 'firebase/firestore'
+import { doc, setDoc, getDoc, serverTimestamp, onSnapshot } from 'firebase/firestore'
 import { auth, db } from './firebase'
 
 export interface UserProfile {
@@ -77,16 +77,80 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
 
     useEffect(() => {
-        const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
+        let unsubscribeProfile: (() => void) | null = null
+
+        const unsubscribeAuth = onAuthStateChanged(auth, async (firebaseUser) => {
             setUser(firebaseUser)
+
+            if (unsubscribeProfile) {
+                unsubscribeProfile()
+                unsubscribeProfile = null
+            }
+
             if (firebaseUser) {
-                await fetchOrCreateProfile(firebaseUser)
+                const userRef = doc(db, 'users', firebaseUser.uid)
+                const studentRef = doc(db, 'students', firebaseUser.uid)
+                let unsubscribeStudent: (() => void) | null = null
+
+                unsubscribeProfile = onSnapshot(userRef, (userSnap: any) => {
+                    if (userSnap.exists()) {
+                        const userData = userSnap.data() as UserProfile
+
+                        // Cleanup previous student listener if exists
+                        if (unsubscribeStudent) {
+                            unsubscribeStudent()
+                            unsubscribeStudent = null
+                        }
+
+                        if (userData.role === 'student') {
+                            unsubscribeStudent = onSnapshot(studentRef, (studentSnap: any) => {
+                                if (studentSnap.exists()) {
+                                    setProfile({ ...userData, ...studentSnap.data() } as UserProfile)
+                                } else {
+                                    setProfile(userData)
+                                }
+                                setIsLoading(false)
+                            })
+                        } else {
+                            setProfile(userData)
+                            setIsLoading(false)
+                        }
+                    } else {
+                        // Create initial profile if missing
+                        const newProfile: UserProfile = {
+                            uid: firebaseUser.uid,
+                            email: firebaseUser.email ?? '',
+                            name: firebaseUser.displayName ?? firebaseUser.email?.split('@')[0] ?? 'Student',
+                            phone: '',
+                            program: '',
+                            role: 'student',
+                        }
+                        setDoc(userRef, { ...newProfile, createdAt: serverTimestamp() })
+                        setDoc(studentRef, { ...newProfile, createdAt: serverTimestamp() })
+                        setProfile(newProfile)
+                        setIsLoading(false)
+                    }
+                }, (error: Error) => {
+                    console.error('Error listening to profile:', error)
+                    setIsLoading(false)
+                })
+
+                // Extend clean up for nested listener
+                const originalUnsubProfile = unsubscribeProfile
+                unsubscribeProfile = () => {
+                    originalUnsubProfile()
+                    if (unsubscribeStudent) unsubscribeStudent()
+                }
             } else {
                 setProfile(null)
+                setIsLoading(false)
             }
-            setIsLoading(false)
         })
-        return unsubscribe
+
+        return () => {
+            unsubscribeAuth()
+            if (unsubscribeProfile) unsubscribeProfile()
+        }
     }, [])
 
     const signIn = async (email: string, password: string) => {
