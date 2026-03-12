@@ -243,13 +243,20 @@ export default function StudentApply() {
                         const isEnrolled = enrolledIds.has(course.id)
 
                         return (
-                            <div key={course.id} className="bg-white border border-border rounded-3xl p-6 hover:shadow-lg hover:shadow-primary/5 transition flex flex-col">
-                                <div className="flex-1">
+                            <div key={course.id} className="bg-white border border-border rounded-3xl overflow-hidden hover:shadow-lg hover:shadow-primary/5 transition flex flex-col">
+                                {/* Course image or coloured header */}
+                                {course.imageUrl ? (
+                                    <div className="w-full h-36 overflow-hidden">
+                                        <img src={course.imageUrl} alt={course.name} className="w-full h-full object-cover" />
+                                    </div>
+                                ) : (
+                                    <div className="w-full h-36 bg-gradient-to-br from-[#0a1128] to-primary/60 flex items-center justify-center">
+                                        <BookOpen className="w-10 h-10 text-white/60" />
+                                    </div>
+                                )}
+                                <div className="flex-1 p-6">
                                     <div className="flex justify-between items-start mb-4">
-                                        <div className="w-12 h-12 rounded-2xl bg-primary/10 text-primary flex items-center justify-center">
-                                            <BookOpen className="w-6 h-6" />
-                                        </div>
-                                        <div className="text-right">
+                                        <div className="text-right ml-auto">
                                             <span className="block text-xl font-black text-[#0a1128]">
                                                 {course.currency} {course.price.toLocaleString()}
                                             </span>

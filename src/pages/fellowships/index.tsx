@@ -68,7 +68,7 @@ export default function FellowshipsPage() {
                             id: doc.id,
                             title: data.name,
                             description: data.description || "Learn in-demand data skills.",
-                            image: fallbackImages[index % fallbackImages.length],
+                            image: data.imageUrl || fallbackImages[index % fallbackImages.length],
                             slug: data.slug || doc.id,
                             price: data.price ?? 0,
                             currency: data.currency || "SLE",
