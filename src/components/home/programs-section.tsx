@@ -41,13 +41,13 @@ const programs = [
 
 export function ProgramsSection() {
   return (
-    <section id="programs" className="bg-background py-10 lg:py-10">
+    <section id="programs" className="bg-background py-6 lg:py-10">
       <div className="mx-auto max-w-[1440px] px-6 lg:px-12">
         <div className="text-center">
           <h3 className="font-poppins text-2xl font-bold text-secondary">
             Start your dream career!
           </h3>
-          <h2 className="mt-4 font-heading text-5xl font-black text-foreground md:text-5xl lg:text-5xl">
+          <h2 className="mt-4 font-heading text-3xl font-black text-foreground sm:text-4xl md:text-5xl">
             Explore Featured Courses
           </h2>
 
@@ -56,7 +56,7 @@ export function ProgramsSection() {
               asChild
               className="h-12 rounded-full px-8 text-md font-bold transition-all duration-300 bg-gradient-to-r from-secondary to-primary text-white hover:scale-105"
             >
-              <Link to="/programs/fellowship">Fellowship Programs</Link>
+              <Link to="/fellowship">Fellowship Programs</Link>
             </Button>
             <Button
               asChild

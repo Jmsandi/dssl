@@ -5,7 +5,7 @@ export default function WaitlistPage() {
         <div className="min-h-screen flex flex-col bg-white">
             <main className="flex-grow">
                 {/* Panoramic Hero */}
-                <section className="relative h-[70vh] min-h-[500px] w-full overflow-hidden flex items-end pb-24 lg:pb-32">
+                <section className="relative h-[55vh] sm:h-[60vh] lg:h-[70vh] min-h-[400px] sm:min-h-[500px] w-full overflow-hidden flex items-end pb-16 sm:pb-24 lg:pb-32">
                     <img
                         src="/data-analytics.jpg"
                         alt="DSSL Students"
@@ -15,8 +15,8 @@ export default function WaitlistPage() {
 
                     <div className="container relative z-10 mx-auto px-6">
                         <div className="max-w-3xl">
-                            <h1 className="text-6xl md:text-8xl font-bold font-heading text-white mb-6 tracking-tight">Waitlist</h1>
-                            <p className="text-xl md:text-2xl text-white/90 leading-relaxed">
+                            <h1 className="text-4xl sm:text-5xl md:text-8xl font-bold font-heading text-white mb-4 sm:mb-6 tracking-tight">Waitlist</h1>
+                            <p className="text-lg sm:text-xl md:text-2xl text-white/90 leading-relaxed">
                                 Be the first to be contacted when applications are opened
                             </p>
                         </div>
@@ -24,7 +24,7 @@ export default function WaitlistPage() {
                 </section>
 
                 {/* Form Section */}
-                <section className="py-24 px-6 bg-slate-50/50">
+                <section className="py-12 sm:py-16 lg:py-24 px-4 sm:px-6 bg-slate-50/50">
                     <div className="container mx-auto max-w-4xl">
                         <WaitlistForm />
                     </div>

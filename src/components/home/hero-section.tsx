@@ -10,30 +10,34 @@ export function HeroSection() {
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
-      // Calculate normalized mouse position from center (-1 to 1)
       const x = (e.clientX / window.innerWidth - 0.5) * 2
       const y = (e.clientY / window.innerHeight - 0.5) * 2
-
-      // Scale for subtle movement (e.g., 30px max)
-      setMousePos({
-        x: x * 20,
-        y: y * 20,
-      })
+      setMousePos({ x: x * 20, y: y * 20 })
+    }
+    const handleTouchMove = (e: TouchEvent) => {
+      const touch = e.touches[0]
+      const x = (touch.clientX / window.innerWidth - 0.5) * 2
+      const y = (touch.clientY / window.innerHeight - 0.5) * 2
+      setMousePos({ x: x * 20, y: y * 20 })
     }
     window.addEventListener("mousemove", handleMouseMove)
-    return () => window.removeEventListener("mousemove", handleMouseMove)
+    window.addEventListener("touchmove", handleTouchMove, { passive: true })
+    return () => {
+      window.removeEventListener("mousemove", handleMouseMove)
+      window.removeEventListener("touchmove", handleTouchMove)
+    }
   }, [])
 
   return (
-    <section className="relative flex h-screen min-h-[800px] items-center justify-center overflow-hidden">
+    <section className="relative flex min-h-[500px] h-[85vh] lg:h-screen lg:min-h-[800px] items-center justify-center overflow-hidden">
       {/* Background Image Container with Parallax-like movement */}
       <div
         className="absolute inset-0 z-0 transition-transform duration-500 ease-out"
         style={{
-          transform: `translate(${mousePos.x}px, ${mousePos.y}px) scale(1.1)`,
+          transform: `translate(${mousePos.x}px, ${mousePos.y}px) scale(1.09)`,
         }}
       >
-        <img src="/bb.jfif" alt="DSSL Students" className="absolute inset-0 h-full w-full object-contain w-full" />
+        <img src="/bb.jfif" alt="DSSL Students" className="absolute inset-0 h-[85vh] sm:h-full w-full object-cover lg:object-contain sm:object-cover object-center" />
         {/* Dim Gradient Overlay */}
         <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/40 to-black/30 z-10" />
         <div className="absolute inset-0 bg-black/30 z-10" />
@@ -64,9 +68,12 @@ export function HeroSection() {
               variant="outline"
               className="w-full sm:w-auto h-12 rounded-full border-2 border-white/10 bg-secondary px-10 text-md font-medium text-white backdrop-blur-md transition-all hover:scale-105 hover:text-white hover:bg-secondary/40"
             >
-              <Link to="/#programs" className="flex items-center justify-center">
+              <button
+                onClick={() => document.getElementById('programs')?.scrollIntoView({ behavior: 'smooth' })}
+                className="flex items-center justify-center"
+              >
                 Explore Programs <ArrowRight className="ml-2 h-4 w-4" />
-              </Link>
+              </button>
             </Button>
             <Button
               asChild

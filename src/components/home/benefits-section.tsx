@@ -11,22 +11,11 @@ const benefits = [
 
 export function BenefitsSection() {
   return (
-    <section className="bg-background py-24 lg:py-32">
+    <section className="bg-background py-12 lg:py-32">
       <div className="mx-auto max-w-[1440px] px-6 lg:px-12">
         <div className="grid gap-10 lg:grid-cols-2 lg:items-center lg:gap-10">
-          {/* Left Side: YouTube Video */}
-          <div className="relative aspect-video w-full overflow-hidden rounded-3xl shadow-2xl">
-            <iframe
-              className="absolute inset-0 h-full w-full"
-              src="https://www.youtube.com/embed/dQw4w9WgXcQ"
-              title="DSSL Training Benefits"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
-            ></iframe>
-          </div>
-
-          {/* Right Side: Content and List */}
-          <div className="max-w-xl">
+          {/* Content and List (shown first on mobile) */}
+          <div className="max-w-xl order-1 lg:order-2">
             <h2 className="font-heading text-3xl font-black text-foreground md:text-5xl lg:text-3xl">
               Our Amazing Benefits
             </h2>
@@ -47,6 +36,17 @@ export function BenefitsSection() {
                 </li>
               ))}
             </ul>
+          </div>
+
+          {/* YouTube Video (shown below on mobile) */}
+          <div className="relative aspect-video w-full overflow-hidden rounded-3xl shadow-2xl order-2 lg:order-1">
+            <iframe
+              className="absolute inset-0 h-full w-full"
+              src="https://www.youtube.com/embed/dQw4w9WgXcQ"
+              title="DSSL Training Benefits"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+            ></iframe>
           </div>
         </div>
       </div>

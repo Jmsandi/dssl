@@ -39,6 +39,7 @@ const navLinks = [
 
 export function SiteHeader() {
     const [mobileOpen, setMobileOpen] = useState(false)
+    const [fellowshipsOpen, setFellowshipsOpen] = useState(false)
     const [scrolled, setScrolled] = useState(false)
     const { pathname } = useLocation()
     const navigate = useNavigate()
@@ -76,7 +77,7 @@ export function SiteHeader() {
                     <img
                         src="/logo.png"
                         alt="DSSL Logo"
-                        className="h-14 w-auto object-contain transition-all duration-300"
+                        className="h-12 w-auto object-contain transition-all duration-300 rounded-full"
                     />
                 </Link>
 
@@ -177,7 +178,7 @@ export function SiteHeader() {
 
                 {/* Sidebar */}
                 <div className={cn(
-                    "absolute inset-y-0 right-0 w-full max-w-md bg-[#0a1128] p-8 text-white shadow-2xl transition-transform duration-500 ease-out",
+                    "absolute inset-y-0 right-0 w-[80%] max-w-md bg-[#0a1128] p-8 text-white shadow-2xl transition-transform duration-500 ease-out",
                     "after:absolute after:inset-0 after:bg-gradient-to-r after:from-[#0a1128] after:to-primary/20 after:pointer-events-none",
                     mobileOpen ? "translate-x-0" : "translate-x-full"
                 )}>
@@ -198,62 +199,87 @@ export function SiteHeader() {
                             </button>
                         </div>
 
-                        <div className="mt-12 overflow-y-auto pr-2">
-                            <div className="space-y-12">
+                        <div className="mt-10 overflow-y-auto pr-2">
+                            <div className="space-y-8">
                                 {/* Primary Navigation Section - Visible on Mobile Sidebar */}
                                 <section className="xl:hidden">
-                                    <h3 className="text-sm font-bold  tracking-widest text-white/80 mb-6">Primary Navigation</h3>
-                                    <div className="flex flex-col gap-4">
-                                        {navLinks.map((link) => (
-                                            <Link
-                                                key={link.name}
-                                                to={link.href}
-                                                onClick={() => setMobileOpen(false)}
-                                                className="text-xl font-bold hover:text-white/80 transition-colors"
-                                            >
-                                                {link.name}
-                                            </Link>
-                                        ))}
+                                    <div className="flex flex-col gap-3">
+                                        {navLinks.map((link) =>
+                                            link.hasDropdown ? (
+                                                <div key={link.name}>
+                                                    <button
+                                                        onClick={() => setFellowshipsOpen(!fellowshipsOpen)}
+                                                        className="flex items-center justify-between w-full text-lg font-bold hover:text-white/80 transition-colors"
+                                                    >
+                                                        {link.name}
+                                                        <ChevronDown className={cn("h-4 w-4 transition-transform duration-300", fellowshipsOpen && "rotate-180")} />
+                                                    </button>
+                                                    <div className={cn(
+                                                        "overflow-hidden transition-all duration-300",
+                                                        fellowshipsOpen ? "max-h-[500px] opacity-100 mt-3" : "max-h-0 opacity-0"
+                                                    )}>
+                                                        <div className="flex flex-col gap-2 pl-4 border-l-2 border-primary/30">
+                                                            {programs.map((prog) => (
+                                                                <Link
+                                                                    key={prog.name}
+                                                                    to={prog.href}
+                                                                    onClick={() => setMobileOpen(false)}
+                                                                    className="text-sm font-medium hover:text-primary transition-colors opacity-90"
+                                                                >
+                                                                    {prog.name}
+                                                                </Link>
+                                                            ))}
+                                                            <Link
+                                                                to="/fellowships"
+                                                                onClick={() => setMobileOpen(false)}
+                                                                className="text-xs font-bold text-primary hover:text-primary/80 transition-colors mt-1"
+                                                            >
+                                                                See All Fellowships →
+                                                            </Link>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            ) : (
+                                                <Link
+                                                    key={link.name}
+                                                    to={link.href}
+                                                    onClick={() => setMobileOpen(false)}
+                                                    className="text-lg font-bold hover:text-white/80 transition-colors"
+                                                >
+                                                    {link.name}
+                                                </Link>
+                                            )
+                                        )}
                                     </div>
                                 </section>
 
-                                {/* Our courses Section */}
-                                <section>
-                                    <h3 className="text-xl font-bold  tracking-widest text-white/80 mb-6">Our Fellowships</h3>
-                                    <div className="flex flex-col gap-4">
+
+                                {/* Our Courses Section — Visible on Desktop Sidebar */}
+                                <section className="hidden xl:block">
+                                    <h3 className="text-2xl font-bold tracking-widest text-white/80 mb-4">Our Courses</h3>
+                                    <div className="flex flex-col gap-3">
                                         {programs.map((prog) => (
                                             <Link
                                                 key={prog.name}
                                                 to={prog.href}
                                                 onClick={() => setMobileOpen(false)}
-                                                className="text-md font-medium hover:text-primary transition-colors opacity-90"
+                                                className="text-base font-medium hover:text-primary transition-colors opacity-90"
                                             >
                                                 {prog.name}
                                             </Link>
                                         ))}
                                         <Button
                                             asChild
-                                            className="mt-4 bg-primary/40 text-md text-white hover:bg-primary/60"
+                                            className="mt-2 w-full text-sm bg-primary/40 hover:bg-primary/60"
                                         >
                                             <Link to="/fellowships" onClick={() => setMobileOpen(false)}>See All Fellowships</Link>
                                         </Button>
                                     </div>
                                 </section>
 
-                                {/* Certification Section */}
-                                <section>
-                                    <h3 className="text-lg font-bold tracking-widest text-white/80 mb-6">Explore Our Certification Courses</h3>
-                                    <Button
-                                        asChild
-                                        className="w-full text-md bg-primary/40 hover:bg-primary/60"
-                                    >
-                                        <Link to="/fellowships" onClick={() => setMobileOpen(false)}>Get Certified</Link>
-                                    </Button>
-                                </section>
-
                                 {/* Auth Section — Mobile Sidebar */}
                                 <section>
-                                    <h3 className="text-lg font-bold tracking-widest text-white/80 mb-6">Account</h3>
+                                    <h3 className="text-sm font-bold tracking-widest text-white/80 mb-4">Account</h3>
                                     {user ? (
                                         <div className="flex flex-col gap-3">
                                             <div className="flex items-center gap-3 px-4 py-3 rounded-2xl bg-white/10">
@@ -287,7 +313,7 @@ export function SiteHeader() {
                                             </Button>
                                             <Button asChild className="w-full bg-primary hover:bg-primary/90 text-white font-bold">
                                                 <Link to="/student/register" onClick={() => setMobileOpen(false)}>
-                                                    Sign Up — It's Free
+                                                    Sign Up - It's Free
                                                 </Link>
                                             </Button>
                                         </div>

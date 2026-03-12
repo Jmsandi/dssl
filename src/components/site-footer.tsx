@@ -28,21 +28,21 @@ export function SiteFooter() {
         <footer className="bg-[#0a1128] text-white pt-16 pb-8 border-t border-slate-800">
             <div className="container mx-auto px-6 lg:px-12 max-w-[1200px]">
                 {/* Top Section */}
-                <div className="grid gap-12 lg:grid-cols-12 mb-16">
+                <div className="flex flex-col lg:grid lg:grid-cols-12 gap-12 mb-16">
 
                     {/* Brand Column */}
-                    <div className="lg:col-span-4 flex flex-col items-start">
+                    <div className="lg:col-span-4 flex flex-col items-center lg:items-start text-center lg:text-left">
                         <Link to="/" className="mb-6 inline-block">
                             <img
                                 src="/footer-logo.png"
                                 alt="DSSL Logo"
-                                className="h-24 w-auto object-contain"
+                                className="h-28 sm:h-24 w-auto object-contain"
                             />
                         </Link>
-                        <p className="text-slate-400 text-sm leading-relaxed mb-6 max-w-sm">
-                            Empowering Africa's future through world-class data science, AI, and analytics education. Join us to transform your career and build innovative solutions.
+                        <p className="text-slate-400 text-base sm:text-sm leading-relaxed mb-6 max-w-sm">
+                                Empowering Africa's future through world-class data science, AI, and analytics education. Join us to transform your career and build innovative solutions.
                         </p>
-                        <div className="flex items-center gap-4">
+                        <div className="flex items-center justify-center lg:justify-start gap-4">
                             {socialLinks.map((social) => (
                                 <a
                                     key={social.name}
@@ -56,8 +56,44 @@ export function SiteFooter() {
                         </div>
                     </div>
 
-                    {/* Links Columns */}
-                    <div className="lg:col-span-8 grid gap-8 sm:grid-cols-3">
+                    {/* Contact — shown right after brand on mobile (order-1), last on desktop */}
+                    <div className="order-1 lg:order-3 lg:col-span-3">
+                        <h3 className="font-heading text-sm font-bold tracking-wider text-white mb-6 uppercase">
+                            Contact
+                        </h3>
+                        <ul className="flex flex-col gap-5">
+                            <li className="flex items-start gap-4 text-sm font-medium text-slate-400">
+                                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white/5 text-primary">
+                                    <Mail className="h-4 w-4" />
+                                </div>
+                                <div className="flex flex-col pt-2 text-left">
+                                    <span className="text-white">Email Us</span>
+                                    <a href="mailto:info@datasciencesl.org" className="hover:text-white transition-colors">info@datasciencesl.org</a>
+                                </div>
+                            </li>
+                            <li className="flex items-start gap-4 text-sm font-medium text-slate-400">
+                                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white/5 text-primary">
+                                    <Phone className="h-4 w-4" />
+                                </div>
+                                <div className="flex flex-col pt-2 text-left">
+                                    <span className="text-white">Call Us</span>
+                                    <a href="tel:+23276000000" className="hover:text-white transition-colors">+232 76 000 000</a>
+                                </div>
+                            </li>
+                            <li className="flex items-start gap-4 text-sm font-medium text-slate-400">
+                                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white/5 text-primary">
+                                    <MapPin className="h-4 w-4" />
+                                </div>
+                                <div className="flex flex-col pt-2 text-left">
+                                    <span className="text-white">Visit Us</span>
+                                    <span>Freetown, Sierra Leone</span>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+
+                    {/* Programs & Company — 2-col on mobile, part of desktop grid */}
+                    <div className="order-2 lg:order-2 lg:col-span-5 grid grid-cols-2 gap-8">
                         {/* Programs */}
                         <div>
                             <h3 className="font-heading text-sm font-bold tracking-wider text-white mb-6 uppercase">
@@ -68,9 +104,9 @@ export function SiteFooter() {
                                     <li key={link.name}>
                                         <Link
                                             to={link.href}
-                                            className="text-sm font-medium text-slate-400 transition-colors hover:text-white flex items-center gap-2"
+                                            className="text-sm font-medium text-slate-400 transition-colors hover:text-white inline-flex items-center gap-2"
                                         >
-                                            <span className="w-1.5 h-1.5 rounded-full bg-primary/50"></span>
+                                            <span className="w-1.5 h-1.5 rounded-full bg-primary/50 hidden lg:block"></span>
                                             {link.name}
                                         </Link>
                                     </li>
@@ -88,49 +124,13 @@ export function SiteFooter() {
                                     <li key={link.name}>
                                         <Link
                                             to={link.href}
-                                            className="text-sm font-medium text-slate-400 transition-colors hover:text-white flex items-center gap-2"
+                                            className="text-sm font-medium text-slate-400 transition-colors hover:text-white inline-flex items-center gap-2"
                                         >
-                                            <span className="w-1.5 h-1.5 rounded-full bg-primary/50"></span>
+                                            <span className="w-1.5 h-1.5 rounded-full bg-primary/50 hidden lg:block"></span>
                                             {link.name}
                                         </Link>
                                     </li>
                                 ))}
-                            </ul>
-                        </div>
-
-                        {/* Contact */}
-                        <div>
-                            <h3 className="font-heading text-sm font-bold tracking-wider text-white mb-6 uppercase">
-                                Contact
-                            </h3>
-                            <ul className="flex flex-col gap-5">
-                                <li className="flex items-start gap-4 text-sm font-medium text-slate-400">
-                                    <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white/5 text-primary">
-                                        <Mail className="h-4 w-4" />
-                                    </div>
-                                    <div className="flex flex-col pt-2">
-                                        <span className="text-white">Email Us</span>
-                                        <a href="mailto:info@datasciencesl.org" className="hover:text-white transition-colors">info@datasciencesl.org</a>
-                                    </div>
-                                </li>
-                                <li className="flex items-start gap-4 text-sm font-medium text-slate-400">
-                                    <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white/5 text-primary">
-                                        <Phone className="h-4 w-4" />
-                                    </div>
-                                    <div className="flex flex-col pt-2">
-                                        <span className="text-white">Call Us</span>
-                                        <a href="tel:+23276000000" className="hover:text-white transition-colors">+232 76 000 000</a>
-                                    </div>
-                                </li>
-                                <li className="flex items-start gap-4 text-sm font-medium text-slate-400">
-                                    <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white/5 text-primary">
-                                        <MapPin className="h-4 w-4" />
-                                    </div>
-                                    <div className="flex flex-col pt-2">
-                                        <span className="text-white">Visit Us</span>
-                                        <span>Freetown, Sierra Leone</span>
-                                    </div>
-                                </li>
                             </ul>
                         </div>
                     </div>
@@ -138,7 +138,7 @@ export function SiteFooter() {
 
                 {/* Bottom Border & Copyright */}
                 <div className="pt-8 border-t border-white/10 flex flex-col md:flex-row items-center justify-between gap-4">
-                    <p className="text-sm font-medium text-slate-500">
+                    <p className="text-sm font-medium text-slate-500 text-center md:text-left">
                         {"\u00A9"} {new Date().getFullYear()} Data Science Sierra Leone (DSSL). All rights reserved.
                     </p>
                     <div className="flex gap-6 text-sm font-medium text-slate-500">

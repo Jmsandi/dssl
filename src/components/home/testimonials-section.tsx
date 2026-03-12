@@ -64,7 +64,7 @@ export function TestimonialsSection() {
   const scrollTo = React.useCallback((index: number) => emblaApi && emblaApi.scrollTo(index), [emblaApi])
 
   return (
-    <section className="bg-background py-24 lg:py-32 overflow-hidden">
+    <section className="bg-background py-12 lg:py-32 overflow-hidden">
       <div className="mx-auto max-w-[1440px] px-6 lg:px-12">
         <div className="mb-16 text-center">
           <h2 className="font-heading text-3xl font-black text-foreground md:text-4xl lg:text-4xl mx-auto">
@@ -104,7 +104,7 @@ export function TestimonialsSection() {
           </div>
 
           {/* Navigation Controls - Simple Icons */}
-          <div className="absolute top-1/2 -translate-y-1/2 left-0 right-0 flex justify-between pointer-events-none">
+          <div className="flex justify-between mt-6 lg:mt-0 lg:absolute lg:top-1/2 lg:-translate-y-1/2 lg:left-0 lg:right-0 pointer-events-none">
             <button
               onClick={scrollPrev}
               className="flex h-12 w-12 items-center justify-center text-primary transition-all hover:scale-110 pointer-events-auto"

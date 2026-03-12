@@ -47,11 +47,11 @@ function StatItem({ stat }: { stat: (typeof stats)[0] }) {
 
   return (
     <div ref={ref} className="flex flex-col items-start gap-2">
-      <p className="font-heading text-5xl font-black tracking-tight text-white md:text-6xl lg:text-5xl">
+      <p className="font-heading text-3xl font-black tracking-tight text-white sm:text-4xl md:text-6xl lg:text-5xl">
         {count}
         {stat.suffix}
       </p>
-      <p className="text-lg font-bold tracking-widest text-white/80">{stat.label}</p>
+      <p className="text-sm sm:text-base lg:text-lg font-bold tracking-widest text-white/80">{stat.label}</p>
     </div>
   )
 }
@@ -64,7 +64,7 @@ export function StatsSection() {
           {/* Dimming Overlay */}
           <div className="absolute inset-0 bg-black/10 pointer-events-none" />
           <div className="relative z-10 mx-auto flex flex-col gap-12 lg:flex-row lg:items-center lg:justify-between lg:gap-8 px-6 lg:px-12">
-            <div className="grid flex-1 grid-cols-1 sm:grid-cols-2 gap-y-12 gap-x-8 md:grid-cols-4 lg:gap-x-16">
+            <div className="grid flex-1 grid-cols-2 gap-y-8 gap-x-6 md:grid-cols-4 lg:gap-x-16">
               {stats.map((stat) => (
                 <StatItem key={stat.label} stat={stat} />
               ))}

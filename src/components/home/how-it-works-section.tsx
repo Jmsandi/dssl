@@ -24,10 +24,10 @@ const steps = [
 
 export function HowItWorksSection() {
   return (
-    <section id="how-it-works" className="relative bg-background py-24 lg:py-24">
+    <section id="how-it-works" className="relative bg-background py-12 lg:py-24">
       <div className="mx-auto max-w-[1440px] px-6 lg:px-12">
         <div className="mb-14 text-center">
-          <h2 className="font-heading text-4xl font-semibold text-foreground md:text-4xl lg:text-4xl">
+          <h2 className="font-heading text-2xl font-semibold text-foreground sm:text-3xl md:text-4xl">
             Our Training Overview
           </h2>
         </div>
@@ -45,7 +45,7 @@ export function HowItWorksSection() {
             {steps.map((step) => (
               <div
                 key={step.step}
-                className="group flex flex-col rounded-xl bg-secondary p-8 shadow-2xl transition-all duration-500 hover:-translate-y-2 lg:p-8"
+                className="group flex flex-col rounded-xl bg-secondary p-5 sm:p-6 shadow-2xl transition-all duration-500 hover:-translate-y-2 lg:p-8"
               >
                 <div className="flex items-center justify-between">
                   <div className="relative">

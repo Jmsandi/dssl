@@ -222,42 +222,42 @@ function PaymentContent() {
     if (!course) return null;
 
     return (
-        <div className="max-w-7xl mx-auto h-full px-4 md:px-8 py-10 lg:py-16 animate-in fade-in duration-700">
-            <div className="flex flex-col lg:flex-row min-h-[850px] rounded-[2.5rem] overflow-hidden shadow-[0_50px_100px_-20px_rgba(0,0,0,0.15)] bg-white border border-slate-100">
+        <div className="max-w-7xl mx-auto h-full px-4 md:px-8 py-6 sm:py-10 lg:py-16 animate-in fade-in duration-700">
+            <div className="flex flex-col lg:flex-row min-h-[500px] lg:min-h-[850px] rounded-2xl sm:rounded-[2.5rem] overflow-hidden shadow-[0_50px_100px_-20px_rgba(0,0,0,0.15)] bg-white border border-slate-100">
                 {/* Left Column: Transaction & Course Info (Dark) */}
-                <div className="w-full lg:w-[48%] bg-[#0a1128] text-white p-8 md:p-12 xl:p-16 flex flex-col relative overflow-hidden">
+                <div className="w-full lg:w-[48%] bg-[#0a1128] text-white p-6 sm:p-8 md:p-12 xl:p-16 flex flex-col relative overflow-hidden">
                     <div className="absolute top-0 left-0 w-full h-full opacity-10 pointer-events-none">
                         <div className="absolute -top-24 -left-24 w-96 h-96 bg-primary rounded-full blur-[120px]" />
                         <div className="absolute -bottom-24 -right-24 w-96 h-96 bg-secondary rounded-full blur-[120px]" />
                     </div>
 
                     <div className="relative z-10 flex flex-col h-full">
-                        <div className="mb-10 text-center lg:text-left">
-                            <h2 className="text-4xl font-black text-white mb-2 tracking-tighter uppercase">Order Details</h2>
-                            <p className="text-slate-400 text-lg leading-snug">Review your enrollment and complete payment via Monime.</p>
+                        <div className="mb-8 sm:mb-10 text-center lg:text-left">
+                            <h2 className="text-xl sm:text-2xl lg:text-4xl font-black text-white mb-2 tracking-tighter uppercase">Order Details</h2>
+                            <p className="text-slate-400 text-base sm:text-lg leading-snug">Review your enrollment and complete payment via Monime.</p>
                         </div>
 
                         {/* Course Summary */}
-                        <div className="mb-10 flex items-start gap-6 bg-white/5 p-6 rounded-3xl border border-white/5">
-                            <div className="relative w-24 h-24 rounded-2xl overflow-hidden shadow-2xl ring-1 ring-white/10 shrink-0">
+                        <div className="mb-8 sm:mb-10 flex items-start gap-4 sm:gap-6 bg-white/5 p-4 sm:p-6 rounded-2xl sm:rounded-3xl border border-white/5">
+                            <div className="relative w-20 h-20 sm:w-24 sm:h-24 rounded-2xl overflow-hidden shadow-2xl ring-1 ring-white/10 shrink-0">
                                 <img src={course.image} alt={course.title} className="absolute inset-0 h-full w-full object-cover" />
                             </div>
                             <div className="flex-1">
-                                <span className="text-[10px] font-bold text-primary uppercase tracking-[0.2em] mb-1 block">Course Selection</span>
-                                <h3 className="text-2xl font-black tracking-tight mb-2 leading-tight">{course.title}</h3>
-                                <p className="text-slate-400 text-xs leading-relaxed line-clamp-2">{course.description}</p>
+                                <span className="text-[9px] sm:text-[10px] font-bold text-primary uppercase tracking-[0.2em] mb-1 block">Course Selection</span>
+                                <h3 className="text-lg sm:text-2xl font-black tracking-tight mb-1 sm:mb-2 leading-tight">{course.title}</h3>
+                                <p className="text-slate-400 text-xs sm:text-sm leading-relaxed line-clamp-2">{course.description}</p>
                             </div>
                         </div>
 
                         {/* Payment Section */}
-                        <div className="flex-1 space-y-6 bg-white/5 p-8 rounded-[2rem] border border-white/5 backdrop-blur-xl flex flex-col justify-center">
+                        <div className="flex-1 space-y-4 sm:space-y-6 bg-white/5 p-5 sm:p-8 rounded-[1.5rem] sm:rounded-[2rem] border border-white/5 backdrop-blur-xl flex flex-col justify-center">
                             <div className="space-y-4">
-                                <div className="flex items-center justify-between mb-4">
+                                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-0 mb-4">
                                     <div className="flex items-center gap-2">
-                                        <Wallet className="w-5 h-5 text-primary" />
-                                        <Label className="text-[10px] font-black uppercase tracking-widest text-primary/80">Monime Mobile Payment</Label>
+                                        <Wallet className="w-5 h-5 text-primary shrink-0" />
+                                        <Label className="text-[10px] font-black uppercase tracking-widest text-primary/80 whitespace-normal">Monime Mobile Payment</Label>
                                     </div>
-                                    <span className="text-xs font-black text-white px-3 py-1 bg-white/10 rounded-full border border-white/10 uppercase tracking-tighter">{displayPrice}</span>
+                                    <span className="text-xs font-black text-white px-3 py-1 bg-white/10 w-fit rounded-full border border-white/10 uppercase tracking-tighter self-start sm:self-auto">{displayPrice}</span>
                                 </div>
 
                                 <div className="space-y-2">
@@ -266,7 +266,7 @@ function PaymentContent() {
                                         value={provider}
                                         onChange={(e) => setProvider(e.target.value)}
                                         disabled={!user}
-                                        className="w-full h-14 bg-white/5 border border-white/10 text-white rounded-xl px-6 focus:bg-white/10 transition-all focus:border-primary font-mono text-lg appearance-none cursor-pointer disabled:opacity-50"
+                                        className="w-full h-12 sm:h-14 bg-white/5 border border-white/10 text-white rounded-xl px-4 sm:px-6 focus:bg-white/10 transition-all focus:border-primary font-mono text-base sm:text-lg appearance-none cursor-pointer disabled:opacity-50"
                                     >
                                         <option value="orange" className="text-black bg-white">Orange Money</option>
                                         <option value="afrimoney" className="text-black bg-white">Afrimoney</option>
@@ -275,15 +275,15 @@ function PaymentContent() {
 
                                 <div className="space-y-2">
                                     <Label htmlFor="pay-phone" className="text-[10px] font-black uppercase tracking-widest text-slate-400 block pb-1">Mobile Number</Label>
-                                    <div className="flex gap-3">
-                                        <div className="h-14 px-5 bg-white/5 border border-white/10 rounded-xl flex items-center font-black text-slate-300">+232</div>
+                                    <div className="flex gap-2 sm:gap-3">
+                                        <div className="h-12 sm:h-14 px-4 sm:px-5 bg-white/5 border border-white/10 rounded-xl flex items-center font-black text-slate-300 text-sm sm:text-base">+232</div>
                                         <Input
                                             id="pay-phone"
                                             value={phone}
                                             onChange={(e) => setPhone(e.target.value)}
                                             disabled={!user}
                                             placeholder="76 000 000"
-                                            className="h-14 bg-white/5 border-white/10 text-white placeholder:text-slate-600 rounded-xl px-6 focus:bg-white/10 transition-all ring-0 border focus:border-primary flex-1 font-mono text-lg disabled:opacity-50"
+                                            className="h-12 sm:h-14 bg-white/5 border-white/10 text-white placeholder:text-slate-600 rounded-xl px-4 sm:px-6 focus:bg-white/10 transition-all ring-0 border focus:border-primary flex-1 font-mono text-base sm:text-lg disabled:opacity-50"
                                             required
                                         />
                                     </div>
@@ -295,7 +295,7 @@ function PaymentContent() {
                                         <Input
                                             readOnly
                                             value={numericPrice}
-                                            className="h-14 bg-white/5 border-white/10 text-white rounded-xl px-6 font-mono text-lg cursor-not-allowed opacity-80"
+                                            className="h-12 sm:h-14 bg-white/5 border-white/10 text-white rounded-xl px-4 sm:px-6 font-mono text-base sm:text-lg cursor-not-allowed opacity-80"
                                         />
                                         <div className="absolute right-6 top-1/2 -translate-y-1/2 text-slate-500 font-bold text-xs uppercase tracking-widest">SLE</div>
                                     </div>
@@ -304,10 +304,10 @@ function PaymentContent() {
                             </div>
 
                             <div className="pt-6 border-t border-white/5 mt-4">
-                                <div className="flex items-center justify-between gap-4">
-                                    <p className="text-[9px] text-slate-500 font-medium whitespace-nowrap uppercase tracking-wider">SECURE TRANSACTION VIA MONIME</p>
-                                    <div className="h-px bg-white/10 flex-1" />
-                                    <span className="text-sm font-black text-primary underline underline-offset-4 decoration-primary/30 uppercase tracking-tighter">TOTAL: {displayPrice}</span>
+                                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4">
+                                    <p className="text-[9px] text-slate-500 font-medium sm:whitespace-nowrap uppercase tracking-wider">SECURE TRANSACTION VIA MONIME</p>
+                                    <div className="hidden sm:block h-px bg-white/10 flex-1" />
+                                    <span className="text-sm font-black text-primary underline underline-offset-4 decoration-primary/30 uppercase tracking-tighter self-start sm:self-auto">TOTAL: {displayPrice}</span>
                                 </div>
                             </div>
                         </div>
@@ -315,7 +315,7 @@ function PaymentContent() {
                 </div>
 
                 {/* Right Column: Signup / Checkout Auth */}
-                <div className="w-full lg:w-[52%] bg-white p-8 md:p-12 xl:p-16 flex flex-col relative">
+                <div className="w-full lg:w-[52%] bg-white p-6 sm:p-8 md:p-12 xl:p-16 flex flex-col relative">
                     <div className="max-w-md mx-auto w-full flex-1 flex flex-col justify-center">
 
                         {user ? (
@@ -325,8 +325,8 @@ function PaymentContent() {
                                     <CheckCircle2 className="w-12 h-12 text-[#2D7FF9]" />
                                 </div>
                                 <div>
-                                    <h2 className="text-3xl font-black text-slate-900 mb-2 tracking-tighter uppercase">Ready to Checkout</h2>
-                                    <p className="text-slate-500 text-lg leading-snug">You are securely logged in and ready to enroll.</p>
+                                    <h2 className="text-2xl sm:text-3xl font-black text-slate-900 mb-2 tracking-tighter uppercase">Ready to Checkout</h2>
+                                    <p className="text-slate-500 text-base sm:text-lg leading-snug">You are securely logged in and ready to enroll.</p>
                                 </div>
 
                                 <div className="bg-slate-50 p-6 rounded-2xl border border-slate-200 text-left">
@@ -340,19 +340,19 @@ function PaymentContent() {
                                 <Button
                                     onClick={handlePayment}
                                     disabled={isPaying || !phone}
-                                    className="w-full h-16 bg-[#0a1128] hover:bg-[#0a1128]/90 text-white font-black text-xl rounded-2xl shadow-xl shadow-slate-900/10 transition-all hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:hover:scale-100"
+                                    className="w-full h-14 sm:h-16 bg-[#0a1128] hover:bg-[#0a1128]/90 text-white font-black text-lg sm:text-xl rounded-2xl shadow-xl shadow-slate-900/10 transition-all hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:hover:scale-100"
                                 >
-                                    {isPaying ? <Loader2 className="w-6 h-6 animate-spin mx-auto" /> : "Proceed to Payment"}
+                                    {isPaying ? <Loader2 className="w-5 h-5 sm:w-6 sm:h-6 animate-spin mx-auto" /> : "Proceed to Payment"}
                                 </Button>
                             </div>
                         ) : (
                             // NOT LOGGED IN - SHOW AUTH FORM
                             <div className="animate-in fade-in duration-500">
-                                <div className="mb-10 text-center lg:text-left">
-                                    <h2 className="text-4xl font-black text-slate-900 mb-2 tracking-tighter uppercase">
+                                <div className="mb-8 sm:mb-10 text-center lg:text-left">
+                                    <h2 className="text-2xl sm:text-3xl lg:text-4xl font-black text-slate-900 mb-2 tracking-tighter uppercase">
                                         {isLoginMode ? "Welcome Back" : "Enter Details"}
                                     </h2>
-                                    <p className="text-slate-500 text-lg leading-snug">
+                                    <p className="text-slate-500 text-base sm:text-lg leading-snug">
                                         {isLoginMode ? "Sign in to complete your enrollment." : "Create an account to track your courses and progress."}
                                     </p>
                                 </div>
@@ -360,33 +360,33 @@ function PaymentContent() {
                                 <form onSubmit={handleAuth} className="space-y-5">
                                     {!isLoginMode && (
                                         <div className="space-y-2">
-                                            <Label htmlFor="name" className="text-slate-700 font-bold text-sm">Full Name <span className="text-primary">*</span></Label>
+                                            <Label htmlFor="name" className="text-slate-700 font-bold text-sm">Full Name <span className="text-red-500">*</span></Label>
                                             <Input
                                                 id="name"
                                                 value={name}
                                                 onChange={(e) => setName(e.target.value)}
                                                 placeholder="John Doe"
-                                                className="h-14 bg-slate-50 border-slate-200 text-slate-900 rounded-xl px-6 focus:bg-white transition-all focus:border-primary focus:ring-1 focus:ring-primary/20"
+                                                className="h-12 sm:h-14 bg-slate-50 border-slate-200 text-slate-900 rounded-xl px-4 sm:px-6 focus:bg-white transition-all focus:border-primary focus:ring-1 focus:ring-primary/20"
                                                 required={!isLoginMode}
                                             />
                                         </div>
                                     )}
 
                                     <div className="space-y-2">
-                                        <Label htmlFor="email" className="text-slate-700 font-bold text-sm">Email Address <span className="text-primary">*</span></Label>
+                                        <Label htmlFor="email" className="text-slate-700 font-bold text-sm">Email Address <span className="text-red-500">*</span></Label>
                                         <Input
                                             id="email"
                                             type="email"
                                             value={email}
                                             onChange={(e) => setEmail(e.target.value)}
                                             placeholder="john@example.com"
-                                            className="h-14 bg-slate-50 border-slate-200 text-slate-900 rounded-xl px-6 focus:bg-white transition-all focus:border-primary focus:ring-1 focus:ring-primary/20"
+                                            className="h-12 sm:h-14 bg-slate-50 border-slate-200 text-slate-900 rounded-xl px-4 sm:px-6 focus:bg-white transition-all focus:border-primary focus:ring-1 focus:ring-primary/20"
                                             required
                                         />
                                     </div>
 
                                     <div className="space-y-2">
-                                        <Label htmlFor="password" className="text-slate-700 font-bold text-sm">Password <span className="text-primary">*</span></Label>
+                                        <Label htmlFor="password" className="text-slate-700 font-bold text-sm">Password <span className="text-red-500">*</span></Label>
                                         <div className="relative">
                                             <Input
                                                 id="password"
@@ -394,7 +394,7 @@ function PaymentContent() {
                                                 value={password}
                                                 onChange={(e) => setPassword(e.target.value)}
                                                 placeholder="••••••••"
-                                                className="h-14 bg-slate-50 border-slate-200 text-slate-900 rounded-xl px-6 focus:bg-white transition-all focus:border-primary focus:ring-1 focus:ring-primary/20"
+                                                className="h-12 sm:h-14 bg-slate-50 border-slate-200 text-slate-900 rounded-xl px-4 sm:px-6 focus:bg-white transition-all focus:border-primary focus:ring-1 focus:ring-primary/20"
                                                 required
                                             />
                                             <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors">
@@ -406,9 +406,9 @@ function PaymentContent() {
                                     <div className="pt-4">
                                         <Button
                                             disabled={authLoading}
-                                            className="w-full h-16 bg-[#0a1128] hover:bg-[#0a1128]/90 text-white font-black text-xl rounded-2xl shadow-xl shadow-slate-900/10 transition-all hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:hover:scale-100"
+                                            className="w-full h-14 sm:h-16 bg-[#0a1128] hover:bg-[#0a1128]/90 text-white font-black text-lg sm:text-xl rounded-2xl shadow-xl shadow-slate-900/10 transition-all hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:hover:scale-100"
                                         >
-                                            {authLoading ? <Loader2 className="w-6 h-6 animate-spin mx-auto" /> : (isLoginMode ? "Sign In" : "Create Account")}
+                                            {authLoading ? <Loader2 className="w-5 h-5 sm:w-6 sm:h-6 animate-spin mx-auto" /> : (isLoginMode ? "Sign In" : "Create Account")}
                                         </Button>
 
                                         <div className="mt-8 text-center">

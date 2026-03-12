@@ -46,7 +46,7 @@ export default function HirePage() {
                 </section>
 
                 {/* Why Hire */}
-                <section className="bg-background overflow-hidden border-y border-border py-20 lg:py-24">
+                <section className="bg-background overflow-hidden border-y border-border py-10 lg:py-24">
                     <div className="mx-auto max-w-[1280px] px-6 lg:px-10">
                         <div className="grid lg:grid-cols-2 items-stretch">
                             <div className="flex flex-col justify-center py-10 lg:pr-12">
@@ -65,15 +65,15 @@ export default function HirePage() {
                 </section>
 
                 {/* Hiring Procedure */}
-                <section className="bg-slate-50/50 py-20 lg:py-24">
+                <section className="bg-slate-50/50 py-10 lg:py-24">
                     <div className="mx-auto max-w-[1280px] px-6 lg:px-10">
                         <div className="grid gap-16 lg:grid-cols-[1.5fr,1fr]">
                             <div>
                                 <h2 className="font-heading text-3xl font-bold text-[#0a192f] md:text-4xl mb-10">Hiring Procedure</h2>
                                 <div className="space-y-6">
                                     {hiringSteps.map((step) => (
-                                        <div key={step.number} className="flex gap-6 rounded-[1.5rem] bg-white p-8 shadow-sm border border-slate-100/50 transition-all hover:shadow-md group">
-                                            <div className="text-4xl font-bold text-secondary opacity-80 group-hover:opacity-100 transition-opacity pt-1">{step.number}</div>
+                                        <div key={step.number} className="flex flex-col items-center text-center sm:flex-row sm:text-left sm:items-start gap-4 sm:gap-6 rounded-[1.5rem] bg-white p-6 sm:p-8 shadow-sm border border-slate-100/50 transition-all hover:shadow-md group">
+                                            <div className="text-4xl font-bold text-secondary opacity-80 group-hover:opacity-100 transition-opacity sm:pt-1">{step.number}</div>
                                             <div>
                                                 <h3 className="text-xl font-bold text-[#0a1128] mb-3">{step.title}</h3>
                                                 <p className="text-slate-600 leading-relaxed text-[0.95rem]">{step.description}</p>
@@ -115,24 +115,24 @@ export default function HirePage() {
                 </section>
 
                 {/* Where Our Graduates Work */}
-                <section className="bg-white py-20 lg:py-24 border-t border-slate-100">
-                    <div className="mx-auto max-w-[1280px] px-6 lg:px-10">
-                        <div className="grid gap-16 lg:grid-cols-2 items-center">
-                            <div className="overflow-hidden rounded-[2rem] shadow-2xl bg-slate-100">
+                <section className="bg-white py-10 lg:py-24 border-t border-slate-100">
+                    <div className="mx-auto max-w-[1280px] px-4 sm:px-6 lg:px-10">
+                        <div className="flex flex-col gap-6 lg:grid lg:grid-cols-2 lg:gap-16 lg:items-center">
+                            <div className="w-full overflow-hidden rounded-xl sm:rounded-2xl lg:rounded-[2rem] shadow-lg lg:shadow-2xl bg-slate-100">
                                 <div className="relative aspect-video">
                                     <iframe className="h-full w-full" src="https://www.youtube.com/embed/dQw4w9WgXcQ" title="Where Our Graduates Work" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen />
                                 </div>
                             </div>
-                            <div className="space-y-8">
+                            <div className="space-y-4 sm:space-y-6 lg:space-y-8">
                                 <div>
-                                    <h2 className="font-heading text-3xl font-bold text-[#0a1128] md:text-4xl mb-4">Where Our Graduates Work</h2>
-                                    <p className="text-lg text-slate-600 leading-relaxed">...and so many more across industries and around the world.</p>
+                                    <h2 className="font-heading text-2xl sm:text-3xl md:text-4xl font-bold text-[#0a1128] mb-2 sm:mb-4">Where Our Graduates Work</h2>
+                                    <p className="text-base sm:text-lg text-slate-600 leading-relaxed">...and so many more across industries and around the world.</p>
                                 </div>
-                                <div className="relative overflow-hidden py-4">
-                                    <div className="animate-marquee flex items-center gap-8 whitespace-nowrap">
+                                <div className="relative overflow-hidden py-2 sm:py-4">
+                                    <div className="animate-marquee flex items-center gap-4 sm:gap-8 whitespace-nowrap">
                                         {[...employers, ...employers].map((employer, i) => (
                                             <div key={`${employer.name}-${i}`} className="flex items-center justify-center grayscale opacity-60 hover:grayscale-0 hover:opacity-100 transition-all duration-500">
-                                                <span className="text-lg font-bold text-slate-400 px-4">{employer.name}</span>
+                                                <span className="text-sm sm:text-lg font-bold text-slate-400 px-2 sm:px-4">{employer.name}</span>
                                             </div>
                                         ))}
                                     </div>
@@ -143,7 +143,7 @@ export default function HirePage() {
                 </section>
 
                 {/* Join Us CTA */}
-                <section className="relative py-32 overflow-hidden">
+                <section className="relative py-16 lg:py-32 overflow-hidden">
                     <div className="absolute inset-0 z-0">
                         <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&q=80&w=1200" alt="Join DSSL in transforming talent" className="absolute inset-0 h-full w-full object-cover" />
                         <div className="absolute inset-0 bg-black/70" />

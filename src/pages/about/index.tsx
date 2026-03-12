@@ -40,10 +40,10 @@ export default function AboutPage() {
             </section>
 
             {/* Our Mission & Vision */}
-            <section className="py-24 bg-white">
+            <section className="py-12 lg:py-24 bg-white">
                 <div className="container mx-auto px-6 lg:px-12">
-                    <div className="grid gap-16 lg:grid-cols-2 items-center">
-                        <div className="relative aspect-video overflow-hidden rounded-3xl shadow-2xl">
+                    <div className="flex flex-col-reverse lg:grid gap-12 lg:gap-16 lg:grid-cols-2 items-center">
+                        <div className="relative w-full aspect-video overflow-hidden rounded-3xl shadow-2xl">
                             <img
                                 src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&q=80&w=800"
                                 alt="Students collaborating at DSSL"
@@ -79,25 +79,26 @@ export default function AboutPage() {
             </section>
 
             {/* Core Values Section */}
-            <section className="py-24 bg-white">
+            <section className="py-12 lg:py-24 bg-white">
                 <div className="container mx-auto px-6 lg:px-12">
                     <div className="text-center mb-8">
-                        <h2 className="font-heading text-4xl font-semibold text-[#0a1128]">Our Core Values</h2>
+                        <h2 className="font-heading text-2xl md:text-4xl font-semibold text-[#0a1128]">Our Core Values</h2>
                     </div>
-                    <div className="flex h-[600px] w-full overflow-hidden lg:h-[700px] shadow-2xl border border-slate-200">
+                    <div className="flex flex-col sm:flex-row h-auto sm:h-[400px] lg:h-[700px] w-full overflow-hidden shadow-2xl border border-slate-200">
                         {coreValues.map((value, index) => (
                             <div
                                 key={value.title}
-                                className={cn("relative h-full cursor-pointer transition-all duration-700 ease-in-out overflow-hidden border-none", expandedIndex === index ? "flex-[4]" : "flex-1")}
+                                className={cn("relative cursor-pointer transition-all duration-700 ease-in-out overflow-hidden border-none", "h-[200px] sm:h-full", expandedIndex === index ? "h-[350px] sm:flex-[4]" : "sm:flex-1")}
+                                onClick={() => setExpandedIndex(expandedIndex === index ? null : index)}
                                 onMouseEnter={() => setExpandedIndex(index)}
                                 onMouseLeave={() => setExpandedIndex(null)}
                             >
                                 <img src={value.image} alt={value.title} className="absolute inset-0 h-full w-full object-cover" />
                                 <div className={cn("absolute inset-0 transition-opacity duration-500 bg-black/20", expandedIndex === index && "bg-black/40")} />
                                 <div className={cn("absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/80 to-transparent transition-opacity duration-500", expandedIndex === index ? "opacity-100" : "opacity-40")} />
-                                <div className={cn("absolute bottom-0 left-0 w-full p-8 text-white transition-all duration-500 delay-100", expandedIndex === index ? "translate-y-0 opacity-100" : "translate-y-10 opacity-0 pointer-events-none")}>
-                                    <h3 className="font-heading text-4xl font-bold mb-2 tracking-tight">{value.title}</h3>
-                                    <p className="text-lg text-slate-200 max-w-lg leading-relaxed">{value.description}</p>
+                                <div className={cn("absolute bottom-0 left-0 w-full p-4 sm:p-8 text-white transition-all duration-500 delay-100", expandedIndex === index ? "translate-y-0 opacity-100" : "translate-y-10 opacity-0 pointer-events-none")}>
+                                    <h3 className="font-heading text-2xl sm:text-3xl lg:text-4xl font-bold mb-2 tracking-tight">{value.title}</h3>
+                                    <p className="text-sm sm:text-lg text-slate-200 max-w-lg leading-relaxed">{value.description}</p>
                                 </div>
                             </div>
                         ))}
@@ -106,7 +107,7 @@ export default function AboutPage() {
             </section>
 
             {/* Video Section with Vision Quote */}
-            <section className="py-24 bg-white">
+            <section className="py-12 lg:py-24 bg-white">
                 <div className="container mx-auto px-6 lg:px-12">
                     <div className="grid gap-12 lg:grid-cols-2 lg:gap-20 items-center">
                         <div className="overflow-hidden rounded-[2rem] shadow-2xl">
@@ -114,7 +115,7 @@ export default function AboutPage() {
                                 <iframe className="h-full w-full" src="https://www.youtube.com/embed/dQw4w9WgXcQ" title="What is DSSL?" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen />
                             </div>
                         </div>
-                        <div className="relative p-12 shadow-sm">
+                        <div className="relative p-6 sm:p-8 lg:p-12 shadow-sm">
                             <div className="absolute top-8 left-8 text-black">
                                 <Quote className="h-12 w-12 fill-current" />
                             </div>
@@ -127,7 +128,7 @@ export default function AboutPage() {
             </section>
 
             {/* The team behind it all */}
-            <section className="py-24 bg-white">
+            <section className="py-12 lg:py-24 bg-white">
                 <div className="container mx-auto px-6 lg:px-12">
                     <div className="text-center mb-16">
                         <h2 className="font-heading text-4xl font-bold text-[#0a1128]">The team behind it all</h2>
@@ -144,7 +145,7 @@ export default function AboutPage() {
             </section>
 
             {/* Sponsors & Partners */}
-            <section className="py-20 bg-white">
+            <section className="py-10 lg:py-20 bg-white">
                 <div className="container mx-auto px-6 lg:px-12 text-center">
                     <h2 className="font-heading text-4xl font-bold text-[#0a1128] mb-16">Our Sponsors & <span className="text-secondary">Partners</span></h2>
                     <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-12 items-center justify-items-center transition-all duration-500">
@@ -158,10 +159,10 @@ export default function AboutPage() {
             </section>
 
             {/* Latest Updates */}
-            <section className="py-24 bg-slate-50 border-t border-slate-100">
+            <section className="py-12 lg:py-24 bg-slate-50 border-t border-slate-100">
                 <div className="container mx-auto px-6 lg:px-12">
-                    <div className="text-center mb-20">
-                        <h2 className="font-heading text-4xl font-bold text-[#0a1128]">Latest Updates</h2>
+                    <div className="text-center mb-10 sm:mb-16 lg:mb-20">
+                        <h2 className="font-heading text-3xl md:text-4xl font-bold text-[#0a1128]">Latest Updates</h2>
                     </div>
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 max-w-7xl mx-auto">
                         {[
@@ -213,7 +214,7 @@ export default function AboutPage() {
             </section>
 
             {/* CTA Section */}
-            <section className="relative py-32 overflow-hidden">
+            <section className="relative py-16 lg:py-32 overflow-hidden">
                 <div className="absolute inset-0 z-0">
                     <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&q=80&w=1200" alt="Join our community" className="absolute inset-0 h-full w-full object-cover" />
                     <div className="absolute inset-0 bg-black/70" />

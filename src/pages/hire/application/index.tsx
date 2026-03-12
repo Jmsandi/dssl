@@ -86,16 +86,16 @@ export default function HireApplicationPage() {
         return (
             <div className="min-h-screen bg-white text-navy flex items-center justify-center px-6">
                 <div className="text-center max-w-lg animate-in fade-in duration-700">
-                    <div className="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-6">
-                        <CheckCircle2 className="w-10 h-10 text-primary" />
+                    <div className="w-16 h-16 sm:w-20 sm:h-20 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4 sm:mb-6">
+                        <CheckCircle2 className="w-8 h-8 sm:w-10 sm:h-10 text-primary" />
                     </div>
-                    <h2 className="text-4xl font-black tracking-tighter mb-4">Request Submitted!</h2>
-                    <p className="text-slate-500 text-lg leading-relaxed mb-8">
+                    <h2 className="text-2xl sm:text-4xl font-black tracking-tighter mb-3 sm:mb-4">Request Submitted!</h2>
+                    <p className="text-slate-500 text-base sm:text-lg leading-relaxed mb-6 sm:mb-8">
                         Thank you for your interest in hiring DSSL graduates. Our team will review your request and get back to you within <strong>2 business days</strong>.
                     </p>
                     <Button
                         onClick={() => window.location.href = "/hire"}
-                        className="h-14 rounded-full bg-navy text-white px-10 font-bold text-lg"
+                        className="h-12 sm:h-14 rounded-full bg-navy text-white px-8 sm:px-10 font-bold text-base sm:text-lg"
                     >
                         Back to Hire Page
                     </Button>
@@ -107,7 +107,7 @@ export default function HireApplicationPage() {
     return (
         <div className="min-h-screen bg-white text-navy">
             {/* Hero Section */}
-            <section className="relative h-[60vh] w-full overflow-hidden">
+            <section className="relative h-[45vh] sm:h-[50vh] lg:h-[60vh] w-full overflow-hidden">
                 <img
                     src="/data-analytics.jpg"
                     alt="DSSL Students"
@@ -115,9 +115,9 @@ export default function HireApplicationPage() {
                 />
                 <div className="absolute inset-0 bg-navy/60" />
 
-                <div className="absolute bottom-20 left-0 right-0 px-6 lg:px-12">
+                <div className="absolute bottom-10 sm:bottom-16 lg:bottom-20 left-0 right-0 px-4 sm:px-6 lg:px-12">
                     <div className="max-w-7xl mx-auto">
-                        <h1 className="text-white text-5xl md:text-7xl font-black tracking-tighter uppercase animate-in fade-in slide-in-from-bottom-8 duration-1000">
+                        <h1 className="text-white text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-black tracking-tighter uppercase animate-in fade-in slide-in-from-bottom-8 duration-1000">
                             Hiring Application
                         </h1>
                     </div>
@@ -125,26 +125,26 @@ export default function HireApplicationPage() {
             </section>
 
             {/* Form Section */}
-            <section className="py-24 px-6 lg:px-12">
+            <section className="py-10 sm:py-16 lg:py-24 px-4 sm:px-6 lg:px-12">
                 <div className="max-w-6xl mx-auto">
-                    <form className="space-y-10" onSubmit={handleSubmit}>
-                        <div className="grid md:grid-cols-2 gap-8">
+                    <form className="space-y-6 sm:space-y-10" onSubmit={handleSubmit}>
+                        <div className="grid md:grid-cols-2 gap-4 sm:gap-8">
                             <div className="space-y-3">
-                                <Label htmlFor="first-name" className="text-sm font-bold flex items-center gap-1 text-navy uppercase tracking-wider">
-                                    First Name <span className="text-primary">*</span>
+                                <Label htmlFor="first-name" className="text-xs sm:text-sm font-bold flex items-center gap-1 text-navy uppercase tracking-wider">
+                                    First Name <span className="text-red-500">*</span>
                                 </Label>
                                 <Input
                                     id="first-name"
                                     placeholder="Enter Your First Name"
-                                    className="h-14 bg-white border-slate-200 text-navy placeholder:text-slate-400 rounded-lg px-6 focus:border-primary transition-all ring-0"
+                                    className="h-12 sm:h-14 bg-white border-slate-200 text-navy placeholder:text-slate-400 rounded-lg px-4 sm:px-6 text-sm sm:text-base focus:border-primary transition-all ring-0"
                                     required
                                     value={form.firstName}
                                     onChange={e => setForm(f => ({ ...f, firstName: e.target.value }))}
                                 />
                             </div>
                             <div className="space-y-3">
-                                <Label htmlFor="last-name" className="text-sm font-bold flex items-center gap-1 text-navy uppercase tracking-wider">
-                                    Last Name <span className="text-primary">*</span>
+                                <Label htmlFor="last-name" className="text-xs sm:text-sm font-bold flex items-center gap-1 text-navy uppercase tracking-wider">
+                                    Last Name <span className="text-red-500">*</span>
                                 </Label>
                                 <Input
                                     id="last-name"
@@ -158,8 +158,8 @@ export default function HireApplicationPage() {
                         </div>
 
                         <div className="space-y-3">
-                            <Label htmlFor="company-email" className="text-sm font-bold flex items-center gap-1 text-navy uppercase tracking-wider">
-                                Company Email <span className="text-primary">*</span>
+                            <Label htmlFor="company-email" className="text-xs sm:text-sm font-bold flex items-center gap-1 text-navy uppercase tracking-wider">
+                                Company Email <span className="text-red-500">*</span>
                                 <Info className="w-3.5 h-3.5 text-primary/60 ml-1" />
                             </Label>
                             <Input
@@ -174,8 +174,8 @@ export default function HireApplicationPage() {
                         </div>
 
                         <div className="space-y-3">
-                            <Label htmlFor="phone" className="text-sm font-bold flex items-center gap-1 text-navy uppercase tracking-wider">
-                                Phone/Mobile <span className="text-primary">*</span>
+                            <Label htmlFor="phone" className="text-xs sm:text-sm font-bold flex items-center gap-1 text-navy uppercase tracking-wider">
+                                Phone/Mobile <span className="text-red-500">*</span>
                             </Label>
                             <Input
                                 id="phone"
@@ -188,8 +188,8 @@ export default function HireApplicationPage() {
                         </div>
 
                         <div className="space-y-3">
-                            <Label htmlFor="company-name" className="text-sm font-bold flex items-center gap-1 text-navy uppercase tracking-wider">
-                                Company/Organization Name <span className="text-primary">*</span>
+                            <Label htmlFor="company-name" className="text-xs sm:text-sm font-bold flex items-center gap-1 text-navy uppercase tracking-wider">
+                                Company/Organization Name <span className="text-red-500">*</span>
                             </Label>
                             <Input
                                 id="company-name"
@@ -202,8 +202,8 @@ export default function HireApplicationPage() {
                         </div>
 
                         <div className="space-y-3">
-                            <Label htmlFor="industry" className="text-sm font-bold flex items-center gap-1 text-navy uppercase tracking-wider">
-                                Industry or Sector <span className="text-primary">*</span>
+                            <Label htmlFor="industry" className="text-xs sm:text-sm font-bold flex items-center gap-1 text-navy uppercase tracking-wider">
+                                Industry or Sector <span className="text-red-500">*</span>
                             </Label>
                             <Input
                                 id="industry"
@@ -216,8 +216,8 @@ export default function HireApplicationPage() {
                         </div>
 
                         <div className="space-y-3">
-                            <Label className="text-sm font-bold flex items-center gap-1 text-navy uppercase tracking-wider">
-                                Talent Requirement <span className="text-primary">*</span>
+                            <Label className="text-xs sm:text-sm font-bold flex items-center gap-1 text-navy uppercase tracking-wider">
+                                Talent Requirement <span className="text-red-500">*</span>
                             </Label>
                             <Select value={talentType} onValueChange={setTalentType}>
                                 <SelectTrigger className="h-14 bg-white border-slate-200 text-slate-500 px-6 rounded-lg focus:ring-0 focus:border-primary">
@@ -233,8 +233,8 @@ export default function HireApplicationPage() {
                         </div>
 
                         <div className="space-y-5">
-                            <Label className="text-sm font-bold flex items-center gap-1 text-navy uppercase tracking-wider">
-                                Skills Required <span className="text-primary">*</span>
+                            <Label className="text-xs sm:text-sm font-bold flex items-center gap-1 text-navy uppercase tracking-wider">
+                                Skills Required <span className="text-red-500">*</span>
                             </Label>
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 {["Artificial Intelligence", "Data Analytics", "Data Engineering", "Data Science", "Digital Marketing", "Other"].map((skill) => (
@@ -253,8 +253,8 @@ export default function HireApplicationPage() {
                         </div>
 
                         <div className="space-y-3">
-                            <Label htmlFor="count" className="text-sm font-bold flex items-center gap-1 text-navy uppercase tracking-wider">
-                                Professionals Count <span className="text-primary">*</span>
+                            <Label htmlFor="count" className="text-xs sm:text-sm font-bold flex items-center gap-1 text-navy uppercase tracking-wider">
+                                Professionals Count <span className="text-red-500">*</span>
                             </Label>
                             <Input
                                 id="count"
@@ -267,8 +267,8 @@ export default function HireApplicationPage() {
                         </div>
 
                         <div className="space-y-3">
-                            <Label htmlFor="responsibilities" className="text-sm font-bold flex items-center gap-1 text-navy uppercase tracking-wider">
-                                Responsibilities Overview <span className="text-primary">*</span>
+                            <Label htmlFor="responsibilities" className="text-xs sm:text-sm font-bold flex items-center gap-1 text-navy uppercase tracking-wider">
+                                Responsibilities Overview <span className="text-red-500">*</span>
                             </Label>
                             <Textarea
                                 id="responsibilities"
@@ -281,8 +281,8 @@ export default function HireApplicationPage() {
                         </div>
 
                         <div className="space-y-3">
-                            <Label className="text-sm font-bold flex items-center gap-1 text-navy uppercase tracking-wider">
-                                Discovery Channel <span className="text-primary">*</span>
+                            <Label className="text-xs sm:text-sm font-bold flex items-center gap-1 text-navy uppercase tracking-wider">
+                                Discovery Channel <span className="text-red-500">*</span>
                             </Label>
                             <Select value={referral} onValueChange={setReferral}>
                                 <SelectTrigger className="h-14 bg-white border-slate-200 text-slate-500 px-6 rounded-lg focus:ring-0 focus:border-primary">
@@ -297,11 +297,11 @@ export default function HireApplicationPage() {
                             </Select>
                         </div>
 
-                        <div className="pt-10">
+                        <div className="pt-6 sm:pt-10">
                             <Button
                                 type="submit"
                                 disabled={submitting}
-                                className="w-full h-16 bg-primary hover:bg-primary/95 text-white font-black text-xl rounded-full shadow-2xl shadow-primary/20 transition-all hover:scale-[1.01] active:scale-[0.99] tracking-tight uppercase"
+                                className="w-full h-12 sm:h-14 lg:h-16 bg-primary hover:bg-primary/95 text-white font-black text-base sm:text-lg lg:text-xl rounded-full shadow-2xl shadow-primary/20 transition-all hover:scale-[1.01] active:scale-[0.99] tracking-tight uppercase"
                             >
                                 {submitting ? (
                                     <><Loader2 className="w-5 h-5 animate-spin mr-2" /> Submitting Request...</>

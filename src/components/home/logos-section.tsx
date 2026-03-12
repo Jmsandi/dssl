@@ -16,7 +16,27 @@ export function LogosSection() {
           Where Our Graduates Work
         </p>
       </div>
-      <div className="relative">
+
+      {/* Mobile: 2-col grid (no slideshow) */}
+      <div className="block sm:hidden px-6">
+        <div className="grid grid-cols-2 gap-6">
+          {employers.map((employer) => (
+            <div
+              key={employer.name}
+              className="flex h-16 items-center justify-center"
+            >
+              <img
+                src={employer.logo}
+                alt={employer.name}
+                className="max-h-full max-w-full object-contain"
+              />
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Desktop: Marquee slideshow */}
+      <div className="relative hidden sm:block">
         {/* Fade edges */}
         <div className="pointer-events-none absolute left-0 top-0 z-10 h-full w-24 bg-gradient-to-r from-background to-transparent" />
         <div className="pointer-events-none absolute right-0 top-0 z-10 h-full w-24 bg-gradient-to-l from-background to-transparent" />

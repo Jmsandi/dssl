@@ -27,11 +27,11 @@ const features = [
 
 export function WhyChooseSection() {
   return (
-    <section className="bg-background py-16 lg:py-16">
+    <section className="bg-background py-8 lg:py-16">
       <div className="mx-auto max-w-[1440px] px-6 lg:px-12">
         {/* Header and Paragraph Split */}
         <div className="grid gap-6 lg:grid-cols-2 lg:items-center lg:gap-6">
-          <h2 className="font-heading text-4xl font-semibold text-foreground md:text-5xl lg:text-5xl">
+          <h2 className="font-heading text-3xl font-semibold text-foreground sm:text-4xl md:text-5xl lg:text-5xl">
             Why Choose DSSL?
           </h2>
           <p className="text-md font-medium leading-relaxed">
@@ -40,7 +40,7 @@ export function WhyChooseSection() {
         </div>
 
         {/* Features Grid with Centered Content and Dividers */}
-        <div className="mt-20 grid gap-0 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="mt-10 lg:mt-20 grid gap-6 sm:gap-0 sm:grid-cols-2 lg:grid-cols-4">
           {features.map((feature, index) => (
             <div key={feature.title} className="relative flex flex-col items-center px-6 text-center group">
               {/* Vertical Divider Line (Starting from the second item) */}
@@ -61,6 +61,14 @@ export function WhyChooseSection() {
               <p className="mt-2 text-sm font-medium leading-relaxed text-muted-foreground">
                 {feature.description}
               </p>
+              {/* Horizontal divider on mobile — same segmented style as desktop vertical */}
+              {index < features.length - 1 && (
+                <div className="mt-6 flex gap-1 items-center justify-center sm:hidden">
+                  <div className="h-[1px] w-16 bg-secondary"></div>
+                  <div className="h-[1px] w-16 bg-secondary"></div>
+                  <div className="h-[1px] w-16 bg-secondary"></div>
+                </div>
+              )}
             </div>
           ))}
         </div>

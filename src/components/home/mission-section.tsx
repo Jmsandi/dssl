@@ -5,13 +5,13 @@ import { Button } from "@/components/ui/button"
 
 export function MissionSection() {
   return (
-    <section className="bg-white py-24 lg:py-">
+    <section className="bg-white py-12 lg:py-24">
       <div className="mx-auto max-w-[1440px] px-6 lg:px-12">
         <div className="grid gap-16 lg:grid-cols-2 lg:gap-32 items-stretch">
           {/* Left Side */}
           <div className="flex flex-col">
             <div>
-              <h2 className="font-heading text-3xl font-semibold leading-[1.2] text-foreground sm:text-4xl md:text-4xl lg:text-5xl">
+              <h2 className="font-heading text-3xl font-semibold leading-[1.2] text-foreground text-center lg:text-left sm:text-4xl md:text-4xl lg:text-5xl">
                 Empowering the Next Generation of Digital Leaders in Sierra Leone
               </h2>
               <div className="relative mt-12 flex-1 w-full max-w-3xl min-h-[300px] sm:min-h-[400px] overflow-hidden rounded-3xl shadow-2xl shadow-black/10">
@@ -36,7 +36,7 @@ export function MissionSection() {
                       <Eye className="h-7 w-7 text-white" />
                     </div>
                     <div>
-                      <h3 className="font-heading text-3xl font-bold text-foreground">Our Mission</h3>
+                      <h3 className="font-heading text-2xl sm:text-3xl font-bold text-foreground">Our Mission</h3>
                       <p className="mt-2 text-md leading-relaxed text-black">
                         To equip Sierra Leoneans with practical data science and AI skills through accessible, hands-on training building a generation of global problem-solvers.
                       </p>
@@ -51,7 +51,7 @@ export function MissionSection() {
                       <Target className="h-7 w-7 text-white" />
                     </div>
                     <div>
-                      <h3 className="font-heading text-3xl font-bold text-foreground">Our Community</h3>
+                      <h3 className="font-heading text-2xl sm:text-3xl font-bold text-foreground">Our Community</h3>
                       <p className="mt-2 text-md leading-relaxed text-black">
                         Producing 10,000 skilled data professionals by 2035 and creating a future where every organization is empowered by data-driven insights.
                       </p>
